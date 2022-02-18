@@ -1,0 +1,82 @@
+.form-control.is-invalid, .was-validated .form-control:invalid{
+    background-image: none;
+}
+.form-control.is-valid, .was-validated .form-control:valid{
+    background-image: none;
+}
+
+/**/
+/**/
+/**/
+/**/
+
+html, body {
+    font-size: 16px;
+}
+
+.center-h {
+    margin: 0 auto;
+    padding: 0;
+    width: auto;
+}
+
+.center-v {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 -50% 0 0;
+    transform: translate(-50%, -50%);
+}
+
+.right {
+    margin-left: auto;
+}
+
+.left {
+    margin-right: auto;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-big-x {
+    font-size: 1.17rem;
+}
+
+.text-big-xx {
+    font-size: 1.33rem;
+}
+
+.text-big-xxx {
+    font-size: 1.5rem;
+}
+
+.text-large-x {
+    font-size: 2rem;
+}
+
+.text-large-xx {
+    font-size: 2.5rem;
+}
+
+.text-large-xxx {
+    font-size: 3rem;
+}
+
+.width-fill {
+    width: 100%;
+}
+

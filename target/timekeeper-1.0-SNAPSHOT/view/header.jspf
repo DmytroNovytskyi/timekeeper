@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="def-table right">
+        <div class="def-row container">
+            <div class="right bold text-bigger">You are authorized as ${sessionScope.user.username}</div>
+        </div>
+        <div class="def-row container">
+            <div class="right">
+                <form action="quit" method="post">
+                    <input class="my-button text-big" btn-color="blue" type="submit" value="Logout">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

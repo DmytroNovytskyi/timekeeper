@@ -1,0 +1,12 @@
+package com.epam.timekeeper.filter;
+
+import javax.servlet.*;
+import java.io.IOException;
+
+public class JSPFilter implements Filter {
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+       request.getRequestDispatcher("/view/error/not-found.jsp").forward(request,response);
+    }
+}

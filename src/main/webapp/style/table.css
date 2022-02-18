@@ -1,0 +1,69 @@
+.my-table {
+    display: table;
+    border-collapse: collapse;
+}
+
+.my-row {
+    display: table-row;
+    align-self: center;
+}
+
+.my-cell {
+    display: table-cell;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.my-row:first-child .my-cell{
+    border-top: none;
+}
+
+.my-row .my-cell:first-child{
+    border-left: none;
+}
+
+.my-row .my-cell:last-child{
+    border-right: none;
+}
+
+.my-row:last-child .my-cell{
+    border-bottom: none;
+}
+
+.my-row:first-child .my-cell:first-child {
+    border-radius: 15px 0 0 0;
+}
+
+.my-row:first-child .my-cell:last-child {
+    border-radius: 0 15px 0 0;
+}
+
+.my-row:last-child .my-cell:last-child {
+    border-radius: 0 0 15px 0;
+}
+
+.my-row:last-child .my-cell:first-child {
+    border-radius: 0 0 0 15px;
+}
+
+.my-row:nth-child(2n) {
+    background-color: #8457A8;
+}
+
+.my-row:nth-child(2n + 1) {
+    background-color: #9D79B9;
+}
+
+.def-table {
+    display: table;
+}
+
+.def-row {
+    display: table-row;
+}
+
+.def-cell {
+    display: table-cell;
+    padding: 5px;
+}
+
