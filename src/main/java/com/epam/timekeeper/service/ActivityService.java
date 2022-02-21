@@ -7,6 +7,7 @@ import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.dto.UserHasActivityDTO;
 import com.epam.timekeeper.entity.Activity;
 import com.epam.timekeeper.dto.ActivityDTO;
+import com.epam.timekeeper.entity.Category;
 import com.epam.timekeeper.exception.ObjectNotFoundException;
 import com.epam.timekeeper.service.mapper.ActivityDTOMapper;
 
@@ -69,7 +70,13 @@ public class ActivityService {
     }
 
     public void update(ActivityDTO activity) {
-        activityDAO.update(ActivityDTOMapper.toEntity(activity));
+        Activity entity = activityDAO.readById(activity.getId());
+        if (entity == null) {
+            throw new ObjectNotFoundException("Couldn't find activity with id = " + activity.getId() + " in database.");
+        }
+        entity.setCategoryID(activity.getCategory().getId());
+        entity.setName(activity.getName());
+        activityDAO.update(entity);
     }
 
     public void close(ActivityDTO activity) {

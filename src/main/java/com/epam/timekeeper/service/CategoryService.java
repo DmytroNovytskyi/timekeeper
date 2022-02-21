@@ -4,6 +4,7 @@ import com.epam.timekeeper.dao.DAO;
 import com.epam.timekeeper.dao.mapper.CategoryMapper;
 import com.epam.timekeeper.dao.preparer.CategoryPreparer;
 import com.epam.timekeeper.dto.CategoryDTO;
+import com.epam.timekeeper.entity.Activity;
 import com.epam.timekeeper.entity.Category;
 import com.epam.timekeeper.exception.ObjectNotFoundException;
 import com.epam.timekeeper.service.mapper.CategoryDTOMapper;
@@ -32,8 +33,25 @@ public class CategoryService {
         return entity == null ? null : CategoryDTOMapper.toDTO(entity);
     }
 
+    public List<CategoryDTO> getAllOpened() {
+        List<Category> categories = categoryDAO.readAll();
+        if (categories == null) {
+            return null;
+        }
+        return categories.stream()
+                .filter(c -> c.getStatus().equals(Category.Status.OPENED))
+                .map(CategoryDTOMapper::toDTO)
+                .sorted(Comparator.comparing(CategoryDTO::getName))
+                .collect(Collectors.toList());
+    }
+
     public void update(CategoryDTO category) {
-        categoryDAO.update(CategoryDTOMapper.toEntity(category));
+        Category entity = categoryDAO.readById(category.getId());
+        if (entity == null) {
+            throw new ObjectNotFoundException("Couldn't find category with id = " + category.getId() + " in database.");
+        }
+        entity.setName(category.getName());
+        categoryDAO.update(entity);
     }
 
     public void create(CategoryDTO category) {

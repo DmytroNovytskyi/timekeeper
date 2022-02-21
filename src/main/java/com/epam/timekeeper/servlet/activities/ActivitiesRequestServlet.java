@@ -14,30 +14,35 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebServlet(name = "ActivitiesRequestServlet", value = "/activities/request")
 public class ActivitiesRequestServlet extends HttpServlet {
 
     private final static String ERROR_MESSAGE = "Internal server error occurred while trying to access activities. Please try again later.";
     private final static String WARNING_MESSAGE = "Database error occurred. Please try again later.";
-    private final static String ERROR_ALREADY_EXISTS_MESSAGE = "Request already exists!";
+    private final static String ALREADY_EXISTS_MESSAGE = "Request already exists!";
     private final static String SUCCESS_REQUEST_MESSAGE = "Request successfully created!";
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActivitiesRequestServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionToRequestMessageMapper.map(request);
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
+        String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doGet -> ";
         try {
             ActivityService activityService = new ActivityService();
             request.setAttribute("list", activityService.getFreeForUser(user));
-            request.getRequestDispatcher("/view/activities/request-activity.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/activities/request-activities.jsp").forward(request, response);
+            LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
-            e.printStackTrace();
+            LOGGER.error(logHeader + "DBException: " + e.getMessage());
             session.setAttribute("warningMessage", WARNING_MESSAGE);
             response.sendRedirect(getServletContext().getContextPath() + "/home");
         } catch (DTOConversionException e) {
-            e.printStackTrace();
+            LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
             session.setAttribute("errorMessage", ERROR_MESSAGE);
             response.sendRedirect(getServletContext().getContextPath() + "/home");
         }
@@ -49,14 +54,16 @@ public class ActivitiesRequestServlet extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
         String activityId = request.getParameter("id");
+        String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doPost -> ";
         try {
             userHasActivityService.requestActivity(createDTO(user, Integer.parseInt(activityId)));
             session.setAttribute("successMessage", SUCCESS_REQUEST_MESSAGE);
+            LOGGER.info(logHeader + "Successfully complete.");
         } catch (AlreadyExistsException e) {
-            e.printStackTrace();
-            session.setAttribute("errorMessage", ERROR_ALREADY_EXISTS_MESSAGE);
+            LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
+            session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
         } catch (DBException e) {
-            e.printStackTrace();
+            LOGGER.error(logHeader + "DBException: " + e.getMessage());
             session.setAttribute("warningMessage", WARNING_MESSAGE);
         }
         response.sendRedirect("request");

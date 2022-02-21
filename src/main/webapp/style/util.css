@@ -1,8 +1,13 @@
-.form-control.is-invalid, .was-validated .form-control:invalid{
+.was-validated .form-control:invalid, .form-control.is-invalid{
     background-image: none;
 }
-.form-control.is-valid, .was-validated .form-control:valid{
+.was-validated .form-control:valid, .form-control.is-valid{
     background-image: none;
+    border-color: #ced4da;
+}
+.form-check{
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * .5);
 }
 
 /**/

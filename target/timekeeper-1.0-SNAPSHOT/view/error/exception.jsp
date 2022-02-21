@@ -3,45 +3,40 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/table.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/button.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/util.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <title>Error</title>
 </head>
 <body>
-<div class="container">
-    <div class="def-table center-h center-v">
-        <c:if test="${requestScope['javax.servlet.error.status_code'] != 500}">
-            <div class="def-row container">
-                <div class="center-h bold text-large-x">Error Details</div>
-            </div>
-            <div class="def-row container">
-                <div class="def-cell left text-big-xx">
-                    <div class="bold">Status Code:</div>
-                    <div>${requestScope['javax.servlet.error.status_code']}</div>
+<div class="container-fluid position-absolute translate-middle-y top-50 left-50">
+    <div class="row justify-content-center">
+        <div class="container col-md-8 col-md-offset-4 shadow p-5">
+            <c:if test="${requestScope['javax.servlet.error.status_code'] != 500}">
+                <div class="row-fluid text-center"><h3 class="fw-bold">Error Details</h3></div>
+                <div class="row">
+                    <h4 class="fst-italic w-auto fw-bold">Status Code:</h4>
+                    <h4 class="w-auto">${requestScope['javax.servlet.error.status_code']}}</h4>
+                    <hr>
                 </div>
+            </c:if>
+            <c:if test="${requestScope['javax.servlet.error.status_code'] == 500}">
+                <div class="row-fluid text-center"><h3 class="fw-bold">Exception Details</h3></div>
+                <div class="row">
+                    <h4 class="fst-italic w-auto fw-bold">Servlet Name:</h4>
+                    <h4 class="w-auto">${requestScope['javax.servlet.error.servlet_name']}</h4>
+                    <hr>
+                </div>
+                <div class="row">
+                    <h4 class="fst-italic w-auto fw-bold ">Exception Name and Message:</h4>
+                    <h4 class="w-auto">${requestScope['javax.servlet.error.exception']}</h4>
+                    <hr>
+                </div>
+            </c:if>
+            <div class="row">
+                <h4 class="fst-italic w-auto fw-bold">Requested URI:</h4>
+                <h4 class="w-auto">${requestScope['javax.servlet.error.request_uri']}</h4>
             </div>
-        </c:if>
-        <c:if test="${requestScope['javax.servlet.error.status_code'] == 500}">
-            <div class="def-row container">
-                <div class="center-h bold text-large-x">Exception Details</div>
-            </div>
-            <div class="def-row container text-big-xx">
-                <div class="bold">Servlet Name:</div>
-                <div>${requestScope['javax.servlet.error.servlet_name']}</div>
-            </div>
-            <div class="def-row container text-big-xx">
-                <div class="bold">Exception Name and Message:</div>
-                <div>${requestScope['javax.servlet.error.exception']}</div>
-            </div>
-        </c:if>
-        <div class="def-row container text-big-xx">
-            <div class="bold">Requested URI:</div>
-            <div>${requestScope['javax.servlet.error.request_uri']}</div>
-        </div>
-        <div class="def-row container">
-            <div class="center-h">
-                <a class="my-button width-xx text-big-xxx" btn-color="blue" href="${pageContext.request.contextPath}/home">Home</a>
+            <div class="row-fluid text-center mt-3">
+                <a class="btn btn-outline-dark w-25" href="${pageContext.request.contextPath}/home">Home</a>
             </div>
         </div>
     </div>

@@ -55,8 +55,8 @@
     </filter>
     <filter-mapping>
         <filter-name>AdminFilter</filter-name>
-        <url-pattern>/activities/new</url-pattern>
-        <url-pattern>/activities/change</url-pattern>
+        <url-pattern>/activities/create</url-pattern>
+        <url-pattern>/activities/update</url-pattern>
         <url-pattern>/categories/*</url-pattern>
         <url-pattern>/users/*</url-pattern>
     </filter-mapping>

@@ -48,7 +48,14 @@ public class UserService {
     }
 
     public void update(UserDTO user, String password) {
-        userDAO.update(UserDTOMapper.toEntity(user, password));
+        User entity = userDAO.readById(user.getId());
+        if (entity == null) {
+            throw new ObjectNotFoundException("Couldn't find user with id = " + user.getId() + " in database.");
+        }
+        entity.setUsername(user.getUsername());
+        entity.setEmail(user.getEmail());
+        entity.setPassword(password.isEmpty() ? entity.getPassword() : password);
+        userDAO.update(entity);
     }
 
     public void create(UserDTO user, String password) {

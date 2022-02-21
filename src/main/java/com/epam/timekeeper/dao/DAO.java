@@ -13,8 +13,8 @@ import java.util.List;
 
 public class DAO<T extends Entity> {
 
-    Preparer<T> preparer;
-    EntityMapper<T> mapper;
+    private final Preparer<T> preparer;
+    private final EntityMapper<T> mapper;
 
     public DAO(Preparer<T> preparer, EntityMapper<T> mapper) {
         this.preparer = preparer;
@@ -31,6 +31,7 @@ public class DAO<T extends Entity> {
             statement = preparer.prepareCreate(connection, entity);
             statement.execute();
             connection.commit();
+
         } catch (SQLException e) {
             rollback(connection);
             e.printStackTrace();

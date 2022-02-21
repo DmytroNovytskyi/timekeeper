@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/util.css">
     <script src="${pageContext.request.contextPath}/script/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/script/jquery-3.5.1.js"></script>
     <script src="${pageContext.request.contextPath}/script/jquery.dataTables.min.js"></script>
     <script src="${pageContext.request.contextPath}/script/dataTables.bootstrap5.min.js"></script>
     <script>
-        const table = $(document).ready(function () {
-            $('#dataTable').DataTable(
+        $(document).ready(function () {
+            const table = $('#dataTable').DataTable(
                 {
                     stateSave: true,
                     "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
@@ -25,29 +26,113 @@
                     ]
                 });
             const checkbox = document.getElementById("check");
-            checkbox.checked = sessionStorage.act_check === 'true';
+            checkbox.checked = sessionStorage.users_check === 'true';
             $('input:checkbox').on('change', function () {
-                sessionStorage.setItem('act_check', document.getElementById("check").checked);
+                sessionStorage.setItem('users_check', document.getElementById("check").checked);
                 const states = $('input:checkbox[name="activeOnly"]:checked').map(function () {
                     return this.value;
                 }).get().join('|');
                 table.column(3).search(states, true, false, false).draw(false);
             });
+
+            $('.modal').on('hide.bs.modal', function () {
+                $(this).find('form').each(function () {
+                    $(this).find('input').each(function () {
+                        $(this).removeClass('is-valid').removeClass('is-invalid')
+                    })
+                    $(this).removeClass('was-validated')
+                })
+            })
+
+            $('#newButton').on('click', function () {
+                $('#createModal').modal('toggle')
+            })
+
+            $('#dataTable tbody').on('click', '.updateButton', function () {
+                const data = table.row($(this).parents('tr')).data();
+                const arr = [$(this).attr('id'), data[0], data[2]]
+                $('#updateModal').data('data', arr).modal('toggle')
+            })
+
+            $('#updateModal').on('show.bs.modal', function () {
+                const data = $(this).data('data')
+                $(this).find('#userId').val(data[0])
+                const username = $(this).find('#usernameUpdate')
+                username.val(data[1])
+                username.removeClass('is-invalid')
+                const email = $(this).find('#emailUpdate')
+                email.val(data[2])
+                email.removeClass('is-invalid')
+            }).on('hide.bs.modal', function () {
+                $(this).find('#passwordUpdate').val('')
+            })
+
+            $('.modalForm').on('submit', function (event) {
+                if (!$(this)[0].checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                const username = $(this).find('.username')
+                const email = $(this).find('.email')
+                const password = $(this).find('.password')
+                const usernameFeedback = $(this).find('.username-feedback')
+                const emailFeedback = $(this).find('.email-feedback')
+                const passwordFeedback = $(this).find('.password-feedback')
+                const usernameValue = username.val()
+                const emailValue = email.val()
+                const passwordValue = password.val()
+
+                if (usernameValue === '') {
+                    usernameFeedback.text('Username cannot be blank')
+                    username.removeClass('is-valid').addClass('is-invalid')
+                } else if (!/^(?=[a-zA-Z0-9._]{8,45}$)(?!.*[_.]{2})[^_.].*[^_.]$/.test(usernameValue)) {
+                    usernameFeedback.text('Username must contain minimum 8 characters maximum 45, letters and digits that may be separated with ._ symbols.')
+                    username.removeClass('is-valid').addClass('is-invalid')
+                } else {
+                    usernameFeedback.text('')
+                    username.removeClass('is-invalid').addClass('is-valid')
+                }
+
+                if (emailValue !== '' && !/^(?=[a-zA-Z0-9._@%-]{6,255}$)[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}$/.test(emailValue)) {
+                    emailFeedback.text('Enter email please. Example: for@example.com')
+                    email.removeClass('is-valid').addClass('is-invalid')
+                } else {
+                    emailFeedback.text('')
+                    email.removeClass('is-invalid').addClass('is-valid')
+                }
+
+                if (password.attr('required') === 'required' && passwordValue === '') {
+                    passwordFeedback.text('Password cannot be blank')
+                    password.removeClass('is-valid').addClass('is-invalid')
+                } else if (passwordValue !== '' && !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,32}$/.test(passwordValue)) {
+                    passwordFeedback.text('Password must contain minimum 8 characters maximum 32, at least one letter, one number and one special character')
+                    password.removeClass('is-valid').addClass('is-invalid')
+                } else {
+                    passwordFeedback.text('')
+                    password.removeClass('is-invalid').addClass('is-valid')
+                }
+                $(this).addClass('was-validated')
+            })
         });
     </script>
 </head>
 <body>
 <%@include file="../other/admin-header.jsp" %>
-<div class="container mt-3 mb-3">
+<%@include file="user-create-modal.jsp" %>
+<%@include file="user-update-modal.jsp" %>
+<div class="container mt-3 mb-3 shadow p-5">
     <%@include file="../other/message.jsp" %>
-    <div class="row col-12">
-        <div class="start-0">
-            <label for="check">Active only:</label>
-            <input id="check" type="checkbox" name="activeOnly" value="ACTIVE">
+    <div class="row col-12 mb-3">
+        <div class="form-check w-auto">
+            <input id="check" type="checkbox" class="btn-check" name="activeOnly" value="ACTIVE" autocomplete="off">
+            <label for="check" class="btn btn-outline-success">Active only</label>
+        </div>
+        <div class="w-auto">
+            <button id="newButton" type="button" class="btn btn-outline-info">New user</button>
         </div>
     </div>
     <div class="row col-12">
-        <table id="dataTable" class="table table-hover w-100">
+        <table id="dataTable" class="table table-hover w-100 text-break">
             <thead>
             <tr>
                 <th>Username</th>
@@ -58,7 +143,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${requestScope.list}" var="user">
+            <c:forEach items="${requestScope.users}" var="user">
                 <tr>
                     <td>${user.username}</td>
                     <td>${user.role.name.toLowerCase()}</td>
@@ -66,8 +151,9 @@
                     <td class="text-lowercase">${user.status}</td>
                     <td class="w-25">
                         <div class="d-flex flex-row justify-content-center">
-                            <a class="btn btn-outline-warning rounded-0 w-50 m-1"
-                               href="users/change?id=${user.id}">Update</a>
+                            <button id="${user.id}" type="button"
+                                    class="updateButton btn btn-outline-warning rounded-0 w-50 m-1">Update
+                            </button>
                             <c:choose>
                                 <c:when test="${user.equals(sessionScope.user)}">
                                     <div class="btn m-1 disabled w-50">This user</div>
