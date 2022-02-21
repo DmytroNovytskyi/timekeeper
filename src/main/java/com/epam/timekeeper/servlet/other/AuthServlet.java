@@ -15,24 +15,19 @@ import javax.servlet.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "AuthServlet", urlPatterns = "/auth")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Other.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
+
+@WebServlet(name = "AuthServlet", value = AUTH)
 public class AuthServlet extends HttpServlet {
-
-    private final static String WRONG_DATA_MESSAGE = "Wrong username or password!";
-    private final static String INTERNAL_ERROR_MESSAGE = "Internal server error occurred. Please try again later.";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to validate your data. Please try again later.";
-    private final static String BANNED_USER_MESSAGE = "This user is banned.";
-    private final static String REQUIREMENTS_MESSAGE = "Username, email or password doesn't match requirements. Please try again.";
-
-    private final static String USERNAME_REGEX = "^(?=[a-zA-Z0-9._]{8,45}$)(?!.*[_.]{2})[^_.].*[^_.]$";
-    private final static String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,32}$";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionToRequestMessageMapper.map(request);
-        request.getRequestDispatcher("view/other/auth.jsp").forward(request, response);
+        request.getRequestDispatcher(AUTH_JSP).forward(request, response);
     }
 
     @Override
@@ -51,31 +46,32 @@ public class AuthServlet extends HttpServlet {
                 if (user != null) {
                     if (user.getStatus().equals(User.Status.BANNED)) {
                         session.setAttribute("errorMessage", BANNED_USER_MESSAGE);
-                        response.sendRedirect("auth");
+                        response.sendRedirect(getServletContext().getContextPath() + AUTH);
                         LOGGER.info(logHeader + "Banned user.");
                     } else {
                         session.setAttribute("user", user);
-                        response.sendRedirect("home");
+                        response.sendRedirect(getServletContext().getContextPath() + HOME);
                         LOGGER.info(logHeader + "Successfully signed in.");
                     }
                 } else {
                     session.setAttribute("errorMessage", WRONG_DATA_MESSAGE);
-                    response.sendRedirect("auth");
+                    response.sendRedirect(getServletContext().getContextPath() + AUTH);
                     LOGGER.info(logHeader + "Wrong username or password.");
                 }
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", WARNING_MESSAGE);
-                response.sendRedirect("auth");
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                response.sendRedirect(getServletContext().getContextPath() + AUTH);
             } catch (DTOConversionException e) {
                 LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
-                session.setAttribute("warningMessage", INTERNAL_ERROR_MESSAGE);
-                response.sendRedirect("auth");
+                session.setAttribute("warningMessage", DTO_CONVERSION_MESSAGE);
+                response.sendRedirect(getServletContext().getContextPath() + AUTH);
             }
         } else {
-            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of username: " + USERNAME_REGEX + " or password:" + PASSWORD_REGEX);
+            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of username: " + USERNAME_REGEX
+                    + " or password:" + PASSWORD_REGEX);
             session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
-            response.sendRedirect("auth");
+            response.sendRedirect(getServletContext().getContextPath() + AUTH);
         }
     }
 

@@ -11,7 +11,10 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "HomeServlet", value = "/home")
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
+
+@WebServlet(name = "HomeServlet", value = HOME)
 public class HomeServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeServlet.class);
@@ -22,12 +25,12 @@ public class HomeServlet extends HttpServlet {
         SessionToRequestMessageMapper.map(request);
         String logHeader = "session:" + request.getSession().getId() + ", username:" + user.getUsername() + ". doGet -> ";
         if (user.getRole().getName().equals("ADMIN")) {
-            request.getRequestDispatcher("/view/other/admin-home.jsp").forward(request, response);
+            request.getRequestDispatcher(ADMIN_HOME_JSP).forward(request, response);
         } else if (user.getRole().getName().equals("WORKER")) {
-            request.getRequestDispatcher("/view/other/worker-home.jsp").forward(request, response);
+            request.getRequestDispatcher(WORKER_HOME_JSP).forward(request, response);
         } else {
             LOGGER.error(logHeader + "Wrong role name.");
-            request.getRequestDispatcher("/view/error/not-found.jsp").forward(request, response);
+            request.getRequestDispatcher(NOT_FOUND_JSP).forward(request, response);
         }
     }
 

@@ -14,13 +14,12 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "ActivityOpenServlet", value = "/activities/open")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+@WebServlet(name = "ActivityOpenServlet", value = ACTIVITIES_OPEN)
 public class ActivityOpenServlet extends HttpServlet {
 
-    private final static String SUCCESS_MESSAGE = "Activity successfully opened.";
-    private final static String ERROR_MESSAGE = "Activity cannot be opened because category is closed.";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to open activity. Please try again later.";
-    private final static String NOT_FOUND_MESSAGE = "Activity was not found.";
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityOpenServlet.class);
 
     @Override
@@ -33,19 +32,19 @@ public class ActivityOpenServlet extends HttpServlet {
             ActivityDTO activityDTO = new ActivityDTO();
             activityDTO.setId(Integer.parseInt(id));
             activityService.open(activityDTO);
-            session.setAttribute("successMessage", SUCCESS_MESSAGE);
+            session.setAttribute("successMessage", SUCCESS_OPEN_MESSAGE);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (ActivityOpenException e) {
             LOGGER.error(logHeader + "ActivityOpenException: " + e.getMessage());
-            session.setAttribute("errorMessage", ERROR_MESSAGE);
+            session.setAttribute("errorMessage", ACTIVITY_OPEN_EXCEPTION_MESSAGE);
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", WARNING_MESSAGE);
+            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
         } catch (ObjectNotFoundException e) {
             LOGGER.error(logHeader + "ObjectNotFoundException: " + e.getMessage());
             session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/activities");
+        response.sendRedirect(getServletContext().getContextPath() + ACTIVITIES);
     }
 
 }

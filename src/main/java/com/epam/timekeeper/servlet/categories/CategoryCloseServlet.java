@@ -10,37 +10,40 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "CategoryCloseServlet", value = "/categories/close")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+
+@WebServlet(name = "CategoryCloseServlet", value = CATEGORY_CLOSE)
 public class CategoryCloseServlet extends HttpServlet {
 
-    private final static String SUCCESS_MESSAGE = "Category successfully closed.";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to close category. Please try again later.";
-    private final static String NOT_FOUND_MESSAGE = "Category was not found.";
     private static final Logger LOGGER = LoggerFactory.getLogger(CategoryCloseServlet.class);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
+        String logHeader = "session:" + session.getId() + ", username:"
+                + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
         try {
             CategoryService categoryService = new CategoryService();
             String id = request.getParameter("id");
             CategoryDTO category = new CategoryDTO();
             category.setId(Integer.parseInt(id));
             categoryService.close(category);
-            session.setAttribute("successMessage", SUCCESS_MESSAGE);
+            session.setAttribute("successMessage", SUCCESS_CLOSE_MESSAGE);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", WARNING_MESSAGE);
+            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
         } catch (ObjectNotFoundException e) {
             LOGGER.error(logHeader + "ObjectNotFoundException: " + e.getMessage());
             session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/categories");
+        response.sendRedirect(getServletContext().getContextPath() + CATEGORIES);
     }
 
 }

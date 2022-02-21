@@ -10,15 +10,16 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "CategoryOpenServlet", value = "/categories/open")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+@WebServlet(name = "CategoryOpenServlet", value = CATEGORIES_OPEN)
 public class CategoryOpenServlet extends HttpServlet {
 
-    private final static String SUCCESS_MESSAGE = "Category successfully opened.";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to open category. Please try again later.";
-    private final static String NOT_FOUND_MESSAGE = "Category was not found.";
     private static final Logger LOGGER = LoggerFactory.getLogger(CategoryOpenServlet.class);
 
     @Override
@@ -31,16 +32,16 @@ public class CategoryOpenServlet extends HttpServlet {
             CategoryDTO category = new CategoryDTO();
             category.setId(Integer.parseInt(id));
             categoryService.open(category);
-            session.setAttribute("successMessage", SUCCESS_MESSAGE);
+            session.setAttribute("successMessage", SUCCESS_OPEN_MESSAGE);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", WARNING_MESSAGE);
+            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
         } catch (ObjectNotFoundException e) {
             LOGGER.error(logHeader + "ObjectNotFoundException: " + e.getMessage());
             session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/categories");
+        response.sendRedirect(getServletContext().getContextPath() + CATEGORIES);
     }
 
 }

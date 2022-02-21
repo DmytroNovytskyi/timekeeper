@@ -14,15 +14,11 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "ActivityCreateServlet", value = "/activities/create")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+@WebServlet(name = "ActivityCreateServlet", value = ACTIVITIES_CREATE)
 public class ActivityCreateServlet extends HttpServlet {
-
-    private final static String SUCCESS_MESSAGE = "Activity successfully created!";
-    private final static String ALREADY_EXISTS_MESSAGE = "Activity with this name already exists!";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to create activity. Please try again later.";
-    private final static String REQUIREMENTS_MESSAGE = "Activity doesn't match requirements. Please try again.";
-
-    private final static String ACTIVITY_NAME_REGEX = "^[\\sa-zA-Z0-9/.-]{8,45}$";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityCreateServlet.class);
 
@@ -36,20 +32,20 @@ public class ActivityCreateServlet extends HttpServlet {
             try {
                 ActivityService activityService = new ActivityService();
                 activityService.create(createDTO(id, name));
-                session.setAttribute("successMessage", SUCCESS_MESSAGE);
+                session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE);
                 LOGGER.info(logHeader + "Successfully complete.");
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-                session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
+                session.setAttribute("errorMessage", ACTIVITY_ALREADY_EXISTS_MESSAGE);
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", WARNING_MESSAGE);
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
             }
         } else {
             LOGGER.error(logHeader + "Passed data doesn't meet the requirements of activity name: " + ACTIVITY_NAME_REGEX);
             session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/activities");
+        response.sendRedirect(getServletContext().getContextPath() + ACTIVITIES);
     }
 
     private ActivityDTO createDTO(int id, String name) {

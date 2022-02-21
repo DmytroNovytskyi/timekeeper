@@ -14,17 +14,11 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "UserCreateServlet", value = "/users/create")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Users.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+@WebServlet(name = "UserCreateServlet", value = USER_CREATE)
 public class UserCreateServlet extends HttpServlet {
-
-    private final static String SUCCESS_MESSAGE = "User successfully created!";
-    private final static String ALREADY_EXISTS_MESSAGE = "User with this username or email already exists!";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to create user. Please try again later.";
-    private final static String REQUIREMENTS_MESSAGE = "Username, email or password doesn't match requirements. Please try again.";
-
-    private final static String USERNAME_REGEX = "^(?=[a-zA-Z0-9._]{8,45}$)(?!.*[_.]{2})[^_.].*[^_.]$";
-    private final static String EMAIL_REGEX = "^(?=[a-zA-Z0-9._@%-]{6,255}$)[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$";
-    private final static String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,32}$";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCreateServlet.class);
 
@@ -35,28 +29,29 @@ public class UserCreateServlet extends HttpServlet {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
+        String logHeader = "session:" + session.getId() + ", username:"
+                + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
         if (username.matches(USERNAME_REGEX)
                 && (email.isEmpty() || email.matches(EMAIL_REGEX))
                 && password.matches(PASSWORD_REGEX)) {
             try {
                 UserService userService = new UserService();
                 userService.create(createDTO(roleId, username, email), password);
-                session.setAttribute("successMessage", SUCCESS_MESSAGE);
+                session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE);
                 LOGGER.info(logHeader + "Successfully complete.");
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
                 session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", WARNING_MESSAGE);
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
             }
         } else {
             LOGGER.error(logHeader + "Passed data doesn't meet the requirements of username: " + USERNAME_REGEX
                     + " or email: " + EMAIL_REGEX + " or password: " + PASSWORD_REGEX);
             session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/users");
+        response.sendRedirect(getServletContext().getContextPath() + USERS);
     }
 
     private UserDTO createDTO(int roleId, String username, String email) {

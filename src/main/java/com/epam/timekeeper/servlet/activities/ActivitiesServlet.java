@@ -16,11 +16,13 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "ActivitiesServlet", value = "/activities")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
+
+@WebServlet(name = "ActivitiesServlet", value = ACTIVITIES)
 public class ActivitiesServlet extends HttpServlet {
 
-    private final static String ERROR_MESSAGE = "Internal server error occurred while trying to access activities. Please try again later.";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to access activities. Please try again later.";
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivitiesServlet.class);
 
     @Override
@@ -35,21 +37,21 @@ public class ActivitiesServlet extends HttpServlet {
                 CategoryService categoryService = new CategoryService();
                 request.setAttribute("activities", activityService.getAll());
                 request.setAttribute("categories", categoryService.getAllOpened());
-                request.getRequestDispatcher("/view/activities/admin-activities.jsp").forward(request, response);
+                request.getRequestDispatcher(ADMIN_ACTIVITIES_JSP).forward(request, response);
             } else {
                 UserHasActivityService userHasActivityService = new UserHasActivityService();
                 request.setAttribute("list", userHasActivityService.getActiveForUser(user));
-                request.getRequestDispatcher("/view/activities/worker-activities.jsp").forward(request, response);
+                request.getRequestDispatcher(WORKER_ACTIVITIES_JSP).forward(request, response);
             }
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", WARNING_MESSAGE);
-            response.sendRedirect("home");
+            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            response.sendRedirect(getServletContext().getContextPath() + HOME);
         } catch (DTOConversionException e) {
             LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
-            session.setAttribute("errorMessage", ERROR_MESSAGE);
-            response.sendRedirect("home");
+            session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            response.sendRedirect(getServletContext().getContextPath() + HOME);
         }
     }
 

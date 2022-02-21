@@ -13,11 +13,12 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "ProcessRequestServlet", value = "/requests/process")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Requests.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+@WebServlet(name = "ProcessRequestServlet", value = PROCESS_REQUEST)
 public class ProcessRequestServlet extends HttpServlet {
 
-    private final static String SUCCESS_MESSAGE = "Request successfully processed!";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to process request. Please try again later.";
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessRequestServlet.class);
 
     @Override
@@ -28,7 +29,8 @@ public class ProcessRequestServlet extends HttpServlet {
         String type = request.getParameter("type");
         UserHasActivityDTO userHasActivity = new UserHasActivityDTO();
         userHasActivity.setId(Integer.parseInt(request.getParameter("id")));
-        String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
+        String logHeader = "session:" + session.getId() + ", username:"
+                + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
         try {
             if (action.equals("Approve") && type.equals("assign")) {
                 userHasActivityService.approveAssign(userHasActivity);
@@ -43,12 +45,12 @@ public class ProcessRequestServlet extends HttpServlet {
                 userHasActivityService.declineAbort(userHasActivity);
                 LOGGER.info(logHeader + "Decline abort successfully complete.");
             }
-            session.setAttribute("successMessage", SUCCESS_MESSAGE);
+            session.setAttribute("successMessage", SUCCESS_PROCESS_MESSAGE);
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", WARNING_MESSAGE);
+            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/requests");
+        response.sendRedirect(getServletContext().getContextPath() + REQUESTS);
     }
 
 }

@@ -10,18 +10,15 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@WebServlet(name = "CategoryCreateServlet", value = "/categories/create")
+import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
+import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
+
+@WebServlet(name = "CategoryCreateServlet", value = CATEGORIES_CREATE)
 public class CategoryCreateServlet extends HttpServlet {
-
-    private final static String SUCCESS_MESSAGE = "Category successfully created!";
-    private final static String ALREADY_EXISTS_MESSAGE = "Category with this name already exists!";
-    private final static String WARNING_MESSAGE = "Database error occurred while trying to create category. Please try again later.";
-    private final static String REQUIREMENTS_MESSAGE = "Category doesn't match requirements. Please try again.";
-
-    private final static String CATEGORY_NAME_REGEX = "^[\\sa-zA-Z0-9/.-]{8,45}$";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CategoryCreateServlet.class);
 
@@ -34,20 +31,20 @@ public class CategoryCreateServlet extends HttpServlet {
             try {
                 CategoryService categoryService = new CategoryService();
                 categoryService.create(createDTO(name));
-                session.setAttribute("successMessage", SUCCESS_MESSAGE);
+                session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE);
                 LOGGER.info(logHeader + "Successfully complete.");
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
                 session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", WARNING_MESSAGE);
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
             }
         } else {
             LOGGER.error(logHeader + "Passed data doesn't meet the requirements of category name: " + CATEGORY_NAME_REGEX);
             session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
         }
-        response.sendRedirect(getServletContext().getContextPath() + "/categories");
+        response.sendRedirect(getServletContext().getContextPath() + CATEGORIES);
     }
 
     private CategoryDTO createDTO(String name) {
