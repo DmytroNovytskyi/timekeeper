@@ -65,4 +65,9 @@ public interface Messages {
         String PASSWORD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,32}$";
     }
 
+    interface Monitoring{
+        String DTO_CONVERSION_MESSAGE = "Internal server error occurred. Please try again later.";
+        String DB_EXCEPTION_MESSAGE = "Database error occurred. Please try again later.";
+    }
+
 }

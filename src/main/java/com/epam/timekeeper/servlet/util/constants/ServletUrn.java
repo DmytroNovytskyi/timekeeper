@@ -24,5 +24,6 @@ public interface ServletUrn {
     String USERS = "/users";
     String USER_UNBAN = "/users/unban";
     String USER_UPDATE = "/users/update";
+    String MONITORING = "/monitoring";
 
 }

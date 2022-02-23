@@ -13,6 +13,9 @@ import com.epam.timekeeper.entity.User;
 import com.epam.timekeeper.entity.UserHasActivity;
 import com.epam.timekeeper.exception.DTOConversionException;
 
+import java.sql.Timestamp;
+import java.time.Duration;
+
 public class UserHasActivityDTOMapper {
 
     private UserHasActivityDTOMapper() {
@@ -31,8 +34,15 @@ public class UserHasActivityDTOMapper {
         dto.setUser(UserDTOMapper.toDTO(user));
         dto.setActivity(ActivityDTOMapper.toDTO(activity));
         dto.setStatus(entity.getStatus());
-        dto.setStartTime(entity.getStartTime());
-        dto.setTimeSpent(entity.getTimeSpent());
+        Timestamp start = entity.getStartTime();
+        Timestamp end = entity.getEndTime();
+        dto.setStartTime(start);
+        dto.setEndTime(end);
+        if (start != null && end != null) {
+            Duration duration = Duration.ofMillis(end.getTime() - start.getTime());
+            dto.setTimeSpent(String.format("%02d:%02d:%02d",
+                    duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart()));
+        }
         return dto;
     }
 
@@ -49,7 +59,7 @@ public class UserHasActivityDTOMapper {
         }
         entity.setStatus(dto.getStatus());
         entity.setStartTime(dto.getStartTime());
-        entity.setTimeSpent(dto.getTimeSpent());
+        entity.setEndTime(dto.getEndTime());
         return entity;
     }
 }

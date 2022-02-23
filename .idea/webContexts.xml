@@ -7,6 +7,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/activities.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/auth.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/exception.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/view/monitoring/monitoring.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view/monitoring" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/view/other/auth.jsp" value="file://$PROJECT_DIR$/src/main/webapp/view/other" />
       </map>
     </option>

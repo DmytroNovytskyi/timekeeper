@@ -21,6 +21,7 @@
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories">Categories</a></li>
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Users</a></li>
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/requests">Requests</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/monitoring">Monitoring</a></li>
                     </ul>
                 </li>
             </ul>

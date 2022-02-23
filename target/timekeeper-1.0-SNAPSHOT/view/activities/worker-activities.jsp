@@ -69,8 +69,7 @@
                         </c:when>
                         <c:otherwise>
                             <td>In progress</td>
-                            <td><fmt:formatDate value="${userHasActivity.startTime}"
-                                                pattern="yy-MM-dd HH:mm:ss"/></td>
+                            <td><fmt:formatDate value="${userHasActivity.startTime}" pattern="dd-MM-yy HH:mm:ss"/></td>
                             <td class="w-25">
                                 <form action="activities/process" method="post">
                                     <div class="d-flex flex-row">

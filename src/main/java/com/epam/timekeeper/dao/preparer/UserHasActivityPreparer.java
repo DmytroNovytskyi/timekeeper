@@ -36,7 +36,7 @@ public class UserHasActivityPreparer implements Preparer<UserHasActivity> {
         int i = 0;
         statement.setString(++i, entity.getStatus().name());
         statement.setTimestamp(++i, entity.getStartTime());
-        statement.setTime(++i, entity.getTimeSpent());
+        statement.setTimestamp(++i, entity.getEndTime());
         statement.setInt(++i, entity.getId());
         return statement;
     }

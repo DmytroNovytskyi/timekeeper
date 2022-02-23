@@ -16,7 +16,7 @@
                         <input id="emailCreate" class="form-control email" name="email"
                                pattern="^(?=[a-zA-Z0-9._@%-]{6,255}$)[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}$">
                         <div class="email-feedback invalid-feedback"></div>
-                        <label for="role" class="form-label">Category</label>
+                        <label for="role" class="form-label">Role</label>
                         <select class="form-control" id="role"
                                 name="roleId">
                             <c:forEach items="${requestScope.roles}" var="role">

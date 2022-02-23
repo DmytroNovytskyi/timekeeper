@@ -12,5 +12,6 @@ public interface JspUrn {
     String NOT_FOUND_JSP = "/view/error/not-found.jsp";
     String REQUESTS_JSP = "/view/requests/requests.jsp";
     String USERS_JSP = "/view/users/users.jsp";
+    String MONITORING_JSP = "/view/monitoring/monitoring.jsp";
 
 }

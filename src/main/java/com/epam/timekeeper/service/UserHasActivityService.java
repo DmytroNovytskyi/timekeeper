@@ -4,14 +4,16 @@ import com.epam.timekeeper.dao.DAO;
 import com.epam.timekeeper.dao.mapper.UserHasActivityMapper;
 import com.epam.timekeeper.dao.preparer.UserHasActivityPreparer;
 import com.epam.timekeeper.dto.ActivityDTO;
+import com.epam.timekeeper.dto.CategoryDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.dto.UserHasActivityDTO;
 import com.epam.timekeeper.entity.UserHasActivity;
 import com.epam.timekeeper.exception.DBException;
 import com.epam.timekeeper.service.mapper.UserHasActivityDTOMapper;
 
-import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,10 +91,7 @@ public class UserHasActivityService {
     public void end(UserHasActivityDTO userHasActivity) {
         userHasActivity.setStatus(UserHasActivity.Status.COMPLETED);
         userHasActivity.setStartTime(readStartTimeFromDB(userHasActivity.getId()));
-        Time time = new Time(System.currentTimeMillis()
-                - userHasActivity.getStartTime().getTime()
-                + new Time(1).getTimezoneOffset() * 60000L);
-        userHasActivity.setTimeSpent(time);
+        userHasActivity.setEndTime(new Timestamp(System.currentTimeMillis()));
         userHasActivityDAO.update(UserHasActivityDTOMapper.toEntity(userHasActivity));
     }
 
@@ -125,7 +124,38 @@ public class UserHasActivityService {
     }
 
     public List<ActivityDTO> mapToActivities(List<UserHasActivityDTO> list) {
+        if(list == null){
+            return null;
+        }
         return list.stream().map(UserHasActivityDTO::getActivity).collect(Collectors.toList());
+    }
+
+    public List<UserHasActivity.Status> getUniqueStatuses(List<UserHasActivityDTO> list){
+        if(list == null){
+            return null;
+        }
+        return list.stream().map(UserHasActivityDTO::getStatus).distinct().collect(Collectors.toList());
+    }
+
+    public List<ActivityDTO> getUniqueActivities(List<UserHasActivityDTO> list) {
+        if (list == null) {
+            return null;
+        }
+        return list.stream().map(UserHasActivityDTO::getActivity).distinct().collect(Collectors.toList());
+    }
+
+    public List<CategoryDTO> getUniqueCategories(List<UserHasActivityDTO> list){
+        if(list == null){
+            return null;
+        }
+        return list.stream().map(uha -> uha.getActivity().getCategory()).distinct().collect(Collectors.toList());
+    }
+
+    public List<UserDTO> getUniqueUsers(List<UserHasActivityDTO> list) {
+        if(list == null){
+            return null;
+        }
+        return list.stream().map(UserHasActivityDTO::getUser).distinct().collect(Collectors.toList());
     }
 
     private Timestamp readStartTimeFromDB(int id) {
@@ -135,5 +165,4 @@ public class UserHasActivityService {
         }
         return dbInfo.getStartTime();
     }
-
 }

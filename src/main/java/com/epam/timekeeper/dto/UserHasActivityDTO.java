@@ -2,7 +2,6 @@ package com.epam.timekeeper.dto;
 
 import com.epam.timekeeper.entity.UserHasActivity;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -12,7 +11,8 @@ public class UserHasActivityDTO extends DTO{
     private ActivityDTO activity;
     private UserHasActivity.Status status;
     private Timestamp startTime;
-    private Time timeSpent;
+    private Timestamp endTime;
+    private String timeSpent;
 
     public UserDTO getUser() {
         return user;
@@ -46,11 +46,19 @@ public class UserHasActivityDTO extends DTO{
         this.startTime = startTime;
     }
 
-    public Time getTimeSpent() {
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getTimeSpent() {
         return timeSpent;
     }
 
-    public void setTimeSpent(Time timeSpent) {
+    public void setTimeSpent(String timeSpent) {
         this.timeSpent = timeSpent;
     }
 
@@ -58,25 +66,18 @@ public class UserHasActivityDTO extends DTO{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserHasActivityDTO that)) return false;
-        return user == that.user && activity == that.activity && status == that.status && Objects.equals(startTime, that.startTime) && Objects.equals(timeSpent, that.timeSpent);
+        return user.equals(that.user) && activity.equals(that.activity) && status == that.status && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime) && Objects.equals(timeSpent, that.timeSpent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, activity, status, startTime, timeSpent);
+        return Objects.hash(user, activity, status, startTime, endTime, timeSpent);
     }
 
     @Override
     public String toString() {
-        return String.format("| %3d | %15s | %15s | %10s | %tY-%tm-%td %tH:%tM:%tS |" +
-                        " %tY-%tm-%td %tH:%tM:%tS |",
-                getId(), user.getUsername(), activity.getName(), status.name(),
-                startTime, startTime, startTime,
-                startTime, startTime, startTime,
-                timeSpent, timeSpent, timeSpent,
-                timeSpent, timeSpent, timeSpent);
-
-
+        return String.format("| %3d | %15s | %15s | %14s | %s | %s | %s |",
+                getId(), user.getUsername(), activity.getName(), status.name(), startTime, endTime, timeSpent);
     }
 
 }
