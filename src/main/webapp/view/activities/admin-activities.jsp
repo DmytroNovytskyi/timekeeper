@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/util.css">
-<%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap-icons.css"/>--%>
+    <%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap-icons.css"/>--%>
     <script src="${pageContext.request.contextPath}/script/jquery-3.5.1.js"></script>
     <script src="${pageContext.request.contextPath}/script/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/script/jquery.dataTables.min.js"></script>
@@ -21,7 +21,7 @@
                     "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
                     "columnDefs": [
                         {
-                            "targets": [3],
+                            "targets": [4],
                             orderable: false
                         }
                     ],
@@ -120,6 +120,7 @@
                 <th>Category</th>
                 <th>Activity</th>
                 <th>Status</th>
+                <th>Workers</th>
                 <th></th>
             </tr>
             </thead>
@@ -129,6 +130,7 @@
                     <td>${activity.category.name}</td>
                     <td>${activity.name}</td>
                     <td class="text-lowercase">${activity.status}</td>
+                    <td>${activity.userCount}</td>
                     <td class="w-25">
                         <div class="d-flex flex-row">
                                 <%--                            <button id="${activity.id}" type="button"--%>
@@ -172,6 +174,7 @@
                 <th>Category</th>
                 <th>Activity</th>
                 <th>Status</th>
+                <th>Workers</th>
                 <th></th>
             </tr>
             </tfoot>

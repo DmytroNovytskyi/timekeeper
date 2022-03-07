@@ -27,12 +27,17 @@ public class RequestsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionToRequestMessageMapper.map(request);
         HttpSession session = request.getSession();
-        String logHeader = "session:" + session.getId() + ", username:"
-                + ((UserDTO) session.getAttribute("user")).getUsername() + ". doGet -> ";
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doGet -> ";
         try {
             UserHasActivityService userHasActivityService = new UserHasActivityService();
-            request.setAttribute("list", userHasActivityService.getAllPending());
-            request.getRequestDispatcher(REQUESTS_JSP).forward(request, response);
+            if (user.getRole().getName().equals("ADMIN")) {
+                request.setAttribute("list", userHasActivityService.getAllPending());
+                request.getRequestDispatcher(ADMIN_REQUESTS_JSP).forward(request, response);
+            } else {
+                request.setAttribute("list", userHasActivityService.getPendingForUser(user));
+                request.getRequestDispatcher(WORKER_REQUESTS_JSP).forward(request, response);
+            }
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());

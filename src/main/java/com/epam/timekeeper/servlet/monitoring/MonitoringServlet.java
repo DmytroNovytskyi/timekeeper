@@ -1,7 +1,6 @@
 package com.epam.timekeeper.servlet.monitoring;
 
 import com.epam.timekeeper.dto.UserDTO;
-import com.epam.timekeeper.dto.UserHasActivityDTO;
 import com.epam.timekeeper.exception.DBException;
 import com.epam.timekeeper.exception.DTOConversionException;
 import com.epam.timekeeper.service.UserHasActivityService;
@@ -11,7 +10,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +27,15 @@ public class MonitoringServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionToRequestMessageMapper.map(request);
         HttpSession session = request.getSession();
-        String logHeader = "session:" + session.getId() + ", username:"
-                + ((UserDTO) session.getAttribute("user")).getUsername() + ". doGet -> ";
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doGet -> ";
         try {
             UserHasActivityService userHasActivityService = new UserHasActivityService();
-            List<UserHasActivityDTO> list = userHasActivityService.getAll();
-            request.setAttribute("list", list);
-            request.setAttribute("statuses", userHasActivityService.getUniqueStatuses(list));
-            request.setAttribute("categories", userHasActivityService.getUniqueCategories(list));
-            request.setAttribute("activities", userHasActivityService.getUniqueActivities(list));
-            request.setAttribute("users", userHasActivityService.getUniqueUsers(list));
+            if(user.getRole().getName().equals("ADMIN")){
+                request.setAttribute("list", userHasActivityService.getAll());
+            } else {
+                request.setAttribute("list", userHasActivityService.getAllForUser(user));
+            }
             request.getRequestDispatcher(MONITORING_JSP).forward(request, response);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {

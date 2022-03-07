@@ -4,7 +4,6 @@ import com.epam.timekeeper.dao.DAO;
 import com.epam.timekeeper.dao.mapper.UserHasActivityMapper;
 import com.epam.timekeeper.dao.preparer.UserHasActivityPreparer;
 import com.epam.timekeeper.dto.ActivityDTO;
-import com.epam.timekeeper.dto.CategoryDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.dto.UserHasActivityDTO;
 import com.epam.timekeeper.entity.UserHasActivity;
@@ -13,8 +12,7 @@ import com.epam.timekeeper.service.mapper.UserHasActivityDTOMapper;
 
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserHasActivityService {
@@ -123,39 +121,58 @@ public class UserHasActivityService {
         userHasActivityDAO.update(UserHasActivityDTOMapper.toEntity(userHasActivity));
     }
 
+    public void cancelAssign(UserHasActivityDTO userHasActivity) {
+        userHasActivity.setStatus(UserHasActivity.Status.DECLINED);
+        userHasActivityDAO.update(UserHasActivityDTOMapper.toEntity(userHasActivity));
+    }
+
+    public void cancelAbort(UserHasActivityDTO userHasActivity) {
+        UserHasActivity entity = userHasActivityDAO.readById(userHasActivity.getId());
+        if (entity == null) {
+            throw new DBException("Couldn't find userHasActivity with id = " + userHasActivity.getId() + " in database.");
+        } else if (entity.getStartTime() != null) {
+            entity.setStatus(UserHasActivity.Status.IN_PROGRESS);
+        } else {
+            entity.setStatus(UserHasActivity.Status.ASSIGNED);
+        }
+        userHasActivityDAO.update(entity);
+    }
+
     public List<ActivityDTO> mapToActivities(List<UserHasActivityDTO> list) {
-        if(list == null){
+        if (list == null) {
             return null;
         }
         return list.stream().map(UserHasActivityDTO::getActivity).collect(Collectors.toList());
     }
 
-    public List<UserHasActivity.Status> getUniqueStatuses(List<UserHasActivityDTO> list){
-        if(list == null){
+    public List<UserHasActivityDTO> getAllWithSummary() {
+        List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
+        if (userHasActivities == null) {
             return null;
         }
-        return list.stream().map(UserHasActivityDTO::getStatus).distinct().collect(Collectors.toList());
-    }
-
-    public List<ActivityDTO> getUniqueActivities(List<UserHasActivityDTO> list) {
-        if (list == null) {
-            return null;
-        }
-        return list.stream().map(UserHasActivityDTO::getActivity).distinct().collect(Collectors.toList());
-    }
-
-    public List<CategoryDTO> getUniqueCategories(List<UserHasActivityDTO> list){
-        if(list == null){
-            return null;
-        }
-        return list.stream().map(uha -> uha.getActivity().getCategory()).distinct().collect(Collectors.toList());
-    }
-
-    public List<UserDTO> getUniqueUsers(List<UserHasActivityDTO> list) {
-        if(list == null){
-            return null;
-        }
-        return list.stream().map(UserHasActivityDTO::getUser).distinct().collect(Collectors.toList());
+        Map<Map.Entry<UserDTO, ActivityDTO>, List<UserHasActivityDTO>> map = userHasActivities.stream()
+                .map(UserHasActivityDTOMapper::toDTO)
+                .collect(Collectors.groupingBy(x -> new AbstractMap.SimpleEntry<>(x.getUser(), x.getActivity())));
+        return map.entrySet().stream().collect(ArrayList::new, (list, x) -> {
+            UserHasActivityDTO dto = new UserHasActivityDTO();
+            long sum = 0;
+            boolean hasCompleted = false;
+            for (UserHasActivityDTO t :
+                    x.getValue()) {
+                if (t.getStatus().equals(UserHasActivity.Status.COMPLETED)) {
+                    sum += t.getEndTime().getTime() - t.getStartTime().getTime();
+                    hasCompleted = true;
+                }
+            }
+            if (hasCompleted) {
+                dto.setUser(x.getKey().getKey());
+                dto.setActivity(x.getKey().getValue());
+                Duration duration = Duration.ofMillis(sum);
+                dto.setTimeSpent(String.format("%02d:%02d:%02d",
+                        duration.toHours(), duration.toMinutesPart(), duration.toSecondsPart()));
+                list.add(dto);
+            }
+        }, ArrayList::addAll);
     }
 
     private Timestamp readStartTimeFromDB(int id) {
@@ -165,4 +182,5 @@ public class UserHasActivityService {
         }
         return dbInfo.getStartTime();
     }
+
 }

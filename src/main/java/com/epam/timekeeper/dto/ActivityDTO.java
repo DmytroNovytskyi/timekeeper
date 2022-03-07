@@ -8,7 +8,8 @@ public class ActivityDTO extends DTO {
 
     private CategoryDTO category;
     private String name;
-    Activity.Status status;
+    private Activity.Status status;
+    private int userCount;
 
     public CategoryDTO getCategory() {
         return category;
@@ -34,22 +35,30 @@ public class ActivityDTO extends DTO {
         this.status = status;
     }
 
+    public int getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ActivityDTO that)) return false;
-        return category.equals(that.category) && name.equals(that.name) && status == that.status;
+        return userCount == that.userCount && category.equals(that.category) && name.equals(that.name) && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(category, name, status);
+        return Objects.hash(category, name, status, userCount);
     }
 
     @Override
     public String toString() {
-        return String.format("| %3d | %10s | %15s | %6s |",
-                getId(), category, name, status.name());
+        return String.format("| %3d | %10s | %15s | %6s | %3d |",
+                getId(), category, name, status.name(), userCount);
     }
 
 }

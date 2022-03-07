@@ -12,6 +12,7 @@
     <script src="${pageContext.request.contextPath}/script/jquery-3.5.1.js"></script>
     <script src="${pageContext.request.contextPath}/script/jquery.dataTables.min.js"></script>
     <script src="${pageContext.request.contextPath}/script/dataTables.bootstrap5.min.js"></script>
+    <script src="${pageContext.request.contextPath}/script/date-euro.js"></script>
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable(
@@ -22,6 +23,10 @@
                         {
                             "targets": [4],
                             orderable: false
+                        },
+                        {
+                            targets: [3],
+                            type: 'date-euro'
                         }
                     ],
                     "language": {

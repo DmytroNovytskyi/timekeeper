@@ -10,7 +10,8 @@ public interface JspUrn {
     String ADMIN_HOME_JSP = "/view/other/admin-home.jsp";
     String WORKER_HOME_JSP = "/view/other/worker-home.jsp";
     String NOT_FOUND_JSP = "/view/error/not-found.jsp";
-    String REQUESTS_JSP = "/view/requests/requests.jsp";
+    String ADMIN_REQUESTS_JSP = "/view/requests/admin-requests.jsp";
+    String WORKER_REQUESTS_JSP = "/view/requests/worker-requests.jsp";
     String USERS_JSP = "/view/users/users.jsp";
     String MONITORING_JSP = "/view/monitoring/monitoring.jsp";
 

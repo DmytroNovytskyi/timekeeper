@@ -10,6 +10,7 @@ public class UserHasActivity extends Entity {
     private Status status;
     private Timestamp startTime;
     private Timestamp endTime;
+    private Timestamp creationDate;
 
     public int getUserId() {
         return userId;
@@ -51,22 +52,30 @@ public class UserHasActivity extends Entity {
         this.endTime = endTime;
     }
 
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserHasActivity that)) return false;
-        return userId == that.userId && activityId == that.activityId && status == that.status && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime);
+        return userId == that.userId && activityId == that.activityId && status == that.status && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime) && creationDate.equals(that.creationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, activityId, status, startTime, endTime);
+        return Objects.hash(userId, activityId, status, startTime, endTime, creationDate);
     }
 
     @Override
     public String toString() {
-        return String.format("| %3d | %3d | %3d | %10s | %s | %s |",
-                getId(), userId, activityId, status.name(), startTime, endTime);
+        return String.format("| %3d | %3d | %3d | %10s | %s | %s | %s |",
+                getId(), userId, activityId, status.name(), startTime, endTime, creationDate);
     }
 
     public enum Status {

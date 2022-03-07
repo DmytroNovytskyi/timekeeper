@@ -16,9 +16,8 @@
     <script src="${pageContext.request.contextPath}/script/dataTables.bootstrap5.min.js"></script>
     <script src="${pageContext.request.contextPath}/script/select2.min.js"></script>
     <script src="${pageContext.request.contextPath}/script/moment.js"></script>
+    <script src="${pageContext.request.contextPath}/script/date-euro.js"></script>
     <script>
-        let minDate, maxDate
-
         $(document).ready(function () {
             const table = $('#dataTable').DataTable(
                 {
@@ -29,12 +28,12 @@
                     },
                     "columnDefs": [
                         {
-                            targets: [3],
-                            type: 'datetime'
+                            targets: [3, 4, 6],
+                            type: 'date-euro'
                         }
                     ],
                     initComplete: function () {
-                        selectProcess(this, '#userSelect', 0)
+                        selectProcess(this, '#firstSelect', 0)
                         selectProcess(this, '#activitySelect', 1)
                         selectProcess(this, '#statusSelect', 2)
                     }
@@ -51,27 +50,23 @@
                     let valid
                     let min = moment($("#min").val())
                     let max = moment($("#max").val())
-                    console.log('min ' + min)
                     if (min.isValid() && !max.isValid()) {
-                        console.log(1)
                         $.each(settings.aoColumns, function (i, col) {
-                            if (col.type === "datetime") {
+                            if (col.type === "date-euro" && i === 6) {
                                 const cDate = moment(data[i], 'DD-MM-YY hh:mm:ss')
                                 valid = cDate.isValid() && !(min == null || cDate.isBefore(min))
                             }
                         });
                     } else if (!min.isValid() && max.isValid()) {
-                        console.log(2)
                         $.each(settings.aoColumns, function (i, col) {
-                            if (col.type === "datetime") {
+                            if (col.type === "date-euro" && i === 6) {
                                 const cDate = moment(data[i], 'DD-MM-YY hh:mm:ss')
                                 valid = cDate.isValid() && !(max == null || cDate.isAfter(max))
                             }
                         });
                     } else if (min.isValid() && max.isValid()) {
-                        console.log(3)
                         $.each(settings.aoColumns, function (i, col) {
-                            if (col.type === "datetime") {
+                            if (col.type === "date-euro" && i === 6) {
                                 const cDate = moment(data[i], 'DD-MM-YY hh:mm:ss')
                                 valid = cDate.isValid() && !(min == null || max == null || cDate.isBefore(min) || cDate.isAfter(max))
                             }
@@ -102,16 +97,33 @@
     </script>
 </head>
 <body>
-<%@include file="../other/admin-header.jsp" %>
+<c:choose>
+    <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
+        <%@include file="../other/admin-header.jsp" %>
+    </c:when>
+    <c:otherwise>
+        <%@include file="../other/worker-header.jsp" %>
+    </c:otherwise>
+</c:choose>
 <div class="container mt-3 mb-3 shadow p-5">
     <%@include file="../other/message.jsp" %>
     <div class="row mb-5">
         <div class="col-6 row">
             <div class="col-4">
-                <label for="userSelect">User</label>
-                <select id="userSelect" class="js-example-basic-single" multiple="multiple">
-                    <option disabled>Chose user...</option>
-                </select>
+                <c:choose>
+                    <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
+                        <label for="firstSelect">User</label>
+                        <select id="firstSelect" class="js-example-basic-single" multiple="multiple">
+                            <option disabled>Chose user...</option>
+                        </select>
+                    </c:when>
+                    <c:otherwise>
+                        <label for="firstSelect">Category</label>
+                        <select id="firstSelect" class="js-example-basic-single" multiple="multiple">
+                            <option disabled>Chose category...</option>
+                        </select>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div class="col-4">
                 <label for="activitySelect">Activity</label>
@@ -128,11 +140,11 @@
         </div>
         <div class="col-6 row">
             <div class="col-6">
-                <label for="min">Min start time</label>
+                <label for="min">After:</label>
                 <input id="min" type="datetime-local" class="rounded border-1 h5 fw-normal">
             </div>
             <div class="col-6">
-                <label for="max">Max start time</label>
+                <label for="max">Before:</label>
                 <input id="max" type="datetime-local" class="rounded border-1 h5 fw-normal">
             </div>
         </div>
@@ -141,34 +153,58 @@
         <table id="dataTable" class="table table-hover w-100 text-break">
             <thead>
             <tr>
-                <th>User</th>
+                <c:choose>
+                    <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
+                        <th>User</th>
+                    </c:when>
+                    <c:otherwise>
+                        <th>Category</th>
+                    </c:otherwise>
+                </c:choose>
                 <th>Activity</th>
                 <th>Status</th>
                 <th>Start time</th>
                 <th>End time</th>
                 <th>Time spent</th>
+                <th>Creation date</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach items="${requestScope.list}" var="userHasActivity">
                 <tr>
-                    <td>${userHasActivity.user.username}</td>
+                    <c:choose>
+                        <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
+                            <td>${userHasActivity.user.username}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td>${userHasActivity.activity.category.name}</td>
+                        </c:otherwise>
+                    </c:choose>
                     <td>${userHasActivity.activity.name}</td>
                     <td class="text-lowercase">${userHasActivity.status}</td>
                     <td><fmt:formatDate value="${userHasActivity.startTime}" pattern="dd-MM-yy HH:mm:ss"/></td>
                     <td><fmt:formatDate value="${userHasActivity.endTime}" pattern="dd-MM-yy HH:mm:ss"/></td>
                     <td>${userHasActivity.timeSpent}</td>
+                    <td><fmt:formatDate value="${userHasActivity.creationDate}" pattern="dd-MM-yy HH:mm:ss"/></td>
                 </tr>
             </c:forEach>
             </tbody>
             <tfoot>
             <tr>
-                <th>User</th>
+                <c:choose>
+                    <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
+                        <th>User</th>
+                    </c:when>
+                    <c:otherwise>
+                        <th>Category</th>
+                    </c:otherwise>
+                </c:choose>
                 <th>Activity</th>
                 <th>Status</th>
                 <th>Start time</th>
                 <th>End time</th>
                 <th>Time spent</th>
+                <th>Creation date</th>
             </tr>
             </tfoot>
         </table>

@@ -4,8 +4,6 @@ import com.epam.timekeeper.entity.UserHasActivity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Duration;
 
 public class UserHasActivityMapper implements EntityMapper<UserHasActivity> {
 
@@ -19,6 +17,7 @@ public class UserHasActivityMapper implements EntityMapper<UserHasActivity> {
         userHasActivity.setStatus(UserHasActivity.Status.valueOf(resultSet.getString(++i)));
         userHasActivity.setStartTime(resultSet.getTimestamp(++i));
         userHasActivity.setEndTime(resultSet.getTimestamp(++i));
+        userHasActivity.setCreationDate(resultSet.getTimestamp(++i));
         return userHasActivity;
     }
 }

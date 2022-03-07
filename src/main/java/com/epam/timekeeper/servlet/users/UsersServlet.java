@@ -4,6 +4,7 @@ import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.exception.DBException;
 import com.epam.timekeeper.exception.DTOConversionException;
 import com.epam.timekeeper.service.RoleService;
+import com.epam.timekeeper.service.UserHasActivityService;
 import com.epam.timekeeper.service.UserService;
 import com.epam.timekeeper.servlet.util.SessionToRequestMessageMapper;
 
@@ -33,8 +34,10 @@ public class UsersServlet extends HttpServlet {
         try {
             UserService userService = new UserService();
             RoleService roleService = new RoleService();
+            UserHasActivityService userHasActivityService = new UserHasActivityService();
             request.setAttribute("users", userService.getAll());
             request.setAttribute("roles", roleService.getAll());
+            request.setAttribute("uha", userHasActivityService.getAllWithSummary());
             request.getRequestDispatcher(USERS_JSP).forward(request, response);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {

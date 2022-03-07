@@ -25,25 +25,35 @@ public class ProcessRequestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserHasActivityService userHasActivityService = new UserHasActivityService();
-        String action = request.getParameter("action");
         String type = request.getParameter("type");
-        UserHasActivityDTO userHasActivity = new UserHasActivityDTO();
-        userHasActivity.setId(Integer.parseInt(request.getParameter("id")));
-        String logHeader = "session:" + session.getId() + ", username:"
-                + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
+        UserDTO user = (UserDTO) session.getAttribute("user");
+        String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doPost -> ";
         try {
-            if (action.equals("Approve") && type.equals("assign")) {
-                userHasActivityService.approveAssign(userHasActivity);
-                LOGGER.info(logHeader + "Approve assign successfully complete.");
-            } else if (action.equals("Approve") && type.equals("abort")) {
-                userHasActivityService.approveAbort(userHasActivity);
-                LOGGER.info(logHeader + "Approve abort successfully complete.");
-            } else if (action.equals("Decline") && type.equals("assign")) {
-                userHasActivityService.declineAssign(userHasActivity);
-                LOGGER.info(logHeader + "Decline assign successfully complete.");
-            } else if (action.equals("Decline") && type.equals("abort")) {
-                userHasActivityService.declineAbort(userHasActivity);
-                LOGGER.info(logHeader + "Decline abort successfully complete.");
+            UserHasActivityDTO userHasActivity = new UserHasActivityDTO();
+            userHasActivity.setId(Integer.parseInt(request.getParameter("id")));
+            if (user.getRole().getName().equals("ADMIN")) {
+                String action = request.getParameter("action");
+                if (action.equals("Approve") && type.equals("assign")) {
+                    userHasActivityService.approveAssign(userHasActivity);
+                    LOGGER.info(logHeader + "Approve assign successfully complete.");
+                } else if (action.equals("Approve") && type.equals("abort")) {
+                    userHasActivityService.approveAbort(userHasActivity);
+                    LOGGER.info(logHeader + "Approve abort successfully complete.");
+                } else if (action.equals("Decline") && type.equals("assign")) {
+                    userHasActivityService.declineAssign(userHasActivity);
+                    LOGGER.info(logHeader + "Decline assign successfully complete.");
+                } else if (action.equals("Decline") && type.equals("abort")) {
+                    userHasActivityService.declineAbort(userHasActivity);
+                    LOGGER.info(logHeader + "Decline abort successfully complete.");
+                }
+            } else {
+                if (type.equals("assign")) {
+                    userHasActivityService.cancelAssign(userHasActivity);
+                    LOGGER.info(logHeader + "Cancel assign successfully complete.");
+                } else if (type.equals("abort")) {
+                    userHasActivityService.cancelAbort(userHasActivity);
+                    LOGGER.info(logHeader + "Cancel abort successfully complete.");
+                }
             }
             session.setAttribute("successMessage", SUCCESS_PROCESS_MESSAGE);
         } catch (DBException e) {

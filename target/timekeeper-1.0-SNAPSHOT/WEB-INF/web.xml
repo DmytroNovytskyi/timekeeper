@@ -48,6 +48,7 @@
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/home</url-pattern>
+        <url-pattern>/quit</url-pattern>
         <url-pattern>/activities/*</url-pattern>
         <url-pattern>/categories/*</url-pattern>
         <url-pattern>/users/*</url-pattern>
@@ -65,7 +66,6 @@
         <url-pattern>/activities/update</url-pattern>
         <url-pattern>/categories/*</url-pattern>
         <url-pattern>/users/*</url-pattern>
-        <url-pattern>/monitoring/*</url-pattern>
     </filter-mapping>
 
     <filter>

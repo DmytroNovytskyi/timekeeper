@@ -17,7 +17,8 @@
                                pattern="^(?=[a-zA-Z0-9._@%-]{6,255}$)[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}$">
                         <div class="email-feedback invalid-feedback"></div>
                         <label for="passwordUpdate" class="form-label">Password</label>
-                        <input id="passwordUpdate" type="password" class="form-control password" name="password"
+                        <input id="passwordUpdate" type="password"
+                               class="form-control password" name="password"
                                pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,32}$">
                         <div class="password-feedback invalid-feedback"></div>
                         <input id="userId" type="hidden" name="userId">

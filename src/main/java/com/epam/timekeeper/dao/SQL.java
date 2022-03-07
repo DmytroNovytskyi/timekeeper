@@ -128,9 +128,9 @@ public interface SQL {
 
         String UPDATE_BY_ID = """
                 UPDATE user_has_activity
-                SET status      = ?,
-                    start_time  = ?,
-                    time_spent  = ?
+                SET status     = ?,
+                    start_time = ?,
+                    end_time   = ?
                 WHERE id = ?;""";
 
         String DELETE_BY_ID = """

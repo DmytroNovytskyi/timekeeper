@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -113,6 +114,16 @@
                 }
                 $(this).addClass('was-validated')
             })
+
+            $('.activitiesButton').on('click', function () {
+                const selector = '.activitiesModal' + $(this).attr('id')
+                $(selector).modal('toggle')
+            })
+
+            $('.userTable').DataTable(
+                {
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                });
         });
     </script>
 </head>
@@ -151,28 +162,40 @@
                     <td class="text-lowercase">${user.status}</td>
                     <td class="w-25">
                         <div class="d-flex flex-row justify-content-center">
-                            <button id="${user.id}" type="button"
-                                    class="updateButton btn btn-outline-warning rounded-0 w-50 m-1">Update
-                            </button>
-                            <c:choose>
-                                <c:when test="${user.equals(sessionScope.user)}">
-                                    <div class="btn m-1 disabled w-50">This user</div>
-                                </c:when>
-                                <c:when test="${user.status.name().equals('ACTIVE')}">
-                                    <form class="w-50" action="users/ban" method="post">
-                                        <input class="btn btn-outline-danger rounded-0 w-100 m-1"
-                                               type="submit" value="Ban">
-                                        <input type="hidden" name="id" value="${user.id}">
-                                    </form>
-                                </c:when>
-                                <c:otherwise>
-                                    <form class="w-50" action="users/unban" method="post">
-                                        <input class="btn btn-outline-success rounded-0 w-100 m-1"
-                                               type="submit" value="Unban">
-                                        <input type="hidden" name="id" value="${user.id}">
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
+                            <div class="col-4 m-1">
+                                <button id="${user.id}" type="button"
+                                        class="updateButton btn btn-outline-warning rounded-0 w-100">Update
+                                </button>
+                            </div>
+                            <div class="col-4 m-1">
+                                <c:choose>
+                                    <c:when test="${user.equals(sessionScope.user)}">
+                                        <div class="btn disabled w-100">This user</div>
+                                    </c:when>
+                                    <c:when test="${user.status.name().equals('ACTIVE')}">
+                                        <form action="users/ban" method="post">
+                                            <input class="btn btn-outline-danger rounded-0 w-100"
+                                                   type="submit" value="Ban">
+                                            <input type="hidden" name="id" value="${user.id}">
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form action="users/unban" method="post">
+                                            <input class="btn btn-outline-success rounded-0 w-100"
+                                                   type="submit" value="Unban">
+                                            <input type="hidden" name="id" value="${user.id}">
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <div class="col-4 m-1">
+                                <c:if test="${not user.role.name.equals('ADMIN')}">
+                                    <button id="${user.id}" type="button"
+                                            class="activitiesButton btn btn-outline-info rounded-0 w-100">Statistics
+                                    </button>
+                                    <%@include file="user-activities-modal.jsp" %>
+                                </c:if>
+                            </div>
                         </div>
                     </td>
                 </tr>

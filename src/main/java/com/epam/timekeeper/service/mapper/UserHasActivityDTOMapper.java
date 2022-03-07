@@ -38,6 +38,7 @@ public class UserHasActivityDTOMapper {
         Timestamp end = entity.getEndTime();
         dto.setStartTime(start);
         dto.setEndTime(end);
+        dto.setCreationDate(entity.getCreationDate());
         if (start != null && end != null) {
             Duration duration = Duration.ofMillis(end.getTime() - start.getTime());
             dto.setTimeSpent(String.format("%02d:%02d:%02d",
@@ -60,6 +61,7 @@ public class UserHasActivityDTOMapper {
         entity.setStatus(dto.getStatus());
         entity.setStartTime(dto.getStartTime());
         entity.setEndTime(dto.getEndTime());
+        entity.setCreationDate(dto.getCreationDate());
         return entity;
     }
 }

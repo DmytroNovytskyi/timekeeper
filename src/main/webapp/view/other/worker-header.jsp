@@ -18,7 +18,9 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities">My activities</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/requests">My requests</a></li>
                         <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities/request">Request activity</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/monitoring">Monitoring</a></li>
                     </ul>
                 </li>
             </ul>

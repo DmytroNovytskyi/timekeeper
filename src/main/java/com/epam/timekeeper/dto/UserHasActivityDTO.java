@@ -5,13 +5,14 @@ import com.epam.timekeeper.entity.UserHasActivity;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class UserHasActivityDTO extends DTO{
+public class UserHasActivityDTO extends DTO {
 
     private UserDTO user;
     private ActivityDTO activity;
     private UserHasActivity.Status status;
     private Timestamp startTime;
     private Timestamp endTime;
+    private Timestamp creationDate;
     private String timeSpent;
 
     public UserDTO getUser() {
@@ -62,22 +63,30 @@ public class UserHasActivityDTO extends DTO{
         this.timeSpent = timeSpent;
     }
 
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserHasActivityDTO that)) return false;
-        return user.equals(that.user) && activity.equals(that.activity) && status == that.status && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime) && Objects.equals(timeSpent, that.timeSpent);
+        return user.equals(that.user) && activity.equals(that.activity) && status == that.status && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime) && creationDate.equals(that.creationDate) && Objects.equals(timeSpent, that.timeSpent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, activity, status, startTime, endTime, timeSpent);
+        return Objects.hash(user, activity, status, startTime, endTime, creationDate, timeSpent);
     }
 
     @Override
     public String toString() {
-        return String.format("| %3d | %15s | %15s | %14s | %s | %s | %s |",
-                getId(), user.getUsername(), activity.getName(), status.name(), startTime, endTime, timeSpent);
+        return String.format("| %3d | %15s | %15s | %14s | %s | %s | %s | %s |",
+                getId(), user.getUsername(), activity.getName(), status.name(), startTime, endTime, timeSpent, creationDate);
     }
 
 }
