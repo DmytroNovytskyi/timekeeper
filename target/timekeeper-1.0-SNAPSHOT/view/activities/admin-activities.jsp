@@ -1,9 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="${cookie.lang.value}"/>
+<fmt:setBundle basename="messages"/>
 <!doctype html>
-<html lang="en">
+<html lang="${cookie.lang.value}">
 <head>
-    <title>Activities</title>
+    <title><fmt:message key="admin.activities.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
@@ -26,7 +29,27 @@
                         }
                     ],
                     "language": {
-                        "emptyTable": "No activities found"
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
                     }
 
                 });
@@ -43,18 +66,27 @@
 
             $('#newButton').on('click', function () {
                 if (${empty requestScope.categories}) {
-                    $('#messageRow').append('<div class="row col-12"> <div class="alert alert-danger alert-dismissible '
-                        + 'fade show"> <strong>Error!</strong> <div id="errorMessage"> No opended categories found. Try opening or creating '
-                        + 'category first.</div> <button type="button" class="btn-close" data-bs-dismiss="alert"></button> </div> </div>')
+                    printCategoriesCheckMessage()
                 } else {
                     $('#createModal').modal('toggle')
                 }
             })
 
+            function printCategoriesCheckMessage() {
+                $('#messageRow').append('<div class="row col-12"> <div class="alert alert-danger'
+                    + ' alert-dismissible fade show"> <strong><fmt:message key="message.errorTitle"/></strong> <div id="errorMessage">'
+                    + '<fmt:message key="admin.activities.error.noCategories"/></div> <button type="button"'
+                    + ' class="btn-close" data-bs-dismiss="alert"></button> </div> </div>')
+            }
+
             $('#dataTable tbody').on('click', '.updateButton', function () {
-                const data = table.row($(this).parents('tr')).data();
-                const arr = [$(this).attr('id'), data[0], data[1]]
-                $('#updateModal').data('data', arr).modal('toggle')
+                if (${empty requestScope.categories}) {
+                    printCategoriesCheckMessage()
+                } else {
+                    const data = table.row($(this).parents('tr')).data();
+                    const arr = [$(this).attr('id'), data[0], data[1]]
+                    $('#updateModal').data('data', arr).modal('toggle')
+                }
             })
 
             $('#updateModal').on('show.bs.modal', function () {
@@ -83,10 +115,10 @@
                 const feedback = $(this).find('.invalid-feedback')
                 const activityValue = activity.val()
                 if (activityValue === '') {
-                    feedback.text('Activity cannot be blank')
+                    feedback.text('<fmt:message key="inputError.activity.blank"/>')
                     activity.removeClass('is-valid').addClass('is-invalid')
                 } else if (!/^[\sa-zA-Z0-9/.-]{8,45}$/.test(activityValue)) {
-                    feedback.text('Activity must contain minimum 8 characters maximum 45, letters, digits or /.- symbols.')
+                    feedback.text('<fmt:message key="inputError.activity.regex"/>')
                     activity.removeClass('is-valid').addClass('is-invalid')
                 } else {
                     activity.removeClass('is-invalid').addClass('is-valid')
@@ -107,20 +139,21 @@
     <div class="row mb-3">
         <div class="form-check w-auto">
             <input id="check" type="checkbox" class="btn-check" name="openedOnly" value="OPENED" autocomplete="off">
-            <label for="check" class="btn btn-outline-success">Opened only</label>
+            <label for="check" class="btn btn-outline-success"><fmt:message key="admin.activities.openedOnly"/></label>
         </div>
         <div class="w-auto">
-            <button id="newButton" type="button" class="btn btn-outline-info">New activity</button>
+            <button id="newButton" type="button" class="btn btn-outline-info"><fmt:message
+                    key="admin.activities.newActivity"/></button>
         </div>
     </div>
     <div class="row col-12">
         <table id="dataTable" class="table table-hover w-100 text-break">
             <thead>
             <tr>
-                <th>Category</th>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Workers</th>
+                <th><fmt:message key="admin.activities.category"/></th>
+                <th><fmt:message key="admin.activities.activity"/></th>
+                <th><fmt:message key="admin.activities.status"/></th>
+                <th><fmt:message key="admin.activities.workers"/></th>
                 <th></th>
             </tr>
             </thead>
@@ -138,13 +171,14 @@
                                 <%--                                <i style="font-size: 1.5rem">Edit <i class="bi bi-pencil-square"></i></i>--%>
                                 <%--                            </button>--%>
                             <button id="${activity.id}" type="button"
-                                    class="updateButton btn btn-outline-warning rounded-0 w-50 m-1">Update
+                                    class="updateButton btn btn-outline-warning rounded-0 w-50 m-1"><fmt:message
+                                    key="admin.activities.update"/>
                             </button>
                             <c:choose>
                                 <c:when test="${activity.status.name().equals('OPENED')}">
                                     <form class="w-50" action="activities/close" method="post">
                                         <input class="btn btn-outline-danger rounded-0 w-100 m-1"
-                                               type="submit" value="Close">
+                                               type="submit" value=<fmt:message key="admin.activities.close"/>>
                                             <%--                                        <button type="submit" value="Close"--%>
                                             <%--                                                class="btn btn-outline-danger border-0 fs-5 bg-transparent shadow-none">--%>
                                             <%--                                            <i style="font-size: 1.5rem">Close <i class="bi bi-x-circle"></i></i>--%>
@@ -159,7 +193,7 @@
                                             <%--                                            <i style="font-size: 1.5rem">Open <i class="bi bi-check-circle"></i></i>--%>
                                             <%--                                        </button>--%>
                                         <input class="btn btn-outline-success rounded-0 w-100 m-1"
-                                               type="submit" value="Open">
+                                               type="submit" value=<fmt:message key="admin.activities.open"/>>
                                         <input type="hidden" name="id" value="${activity.id}">
                                     </form>
                                 </c:otherwise>
@@ -171,10 +205,10 @@
             </tbody>
             <tfoot>
             <tr>
-                <th>Category</th>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Workers</th>
+                <th><fmt:message key="admin.activities.category"/></th>
+                <th><fmt:message key="admin.activities.activity"/></th>
+                <th><fmt:message key="admin.activities.status"/></th>
+                <th><fmt:message key="admin.activities.workers"/></th>
                 <th></th>
             </tr>
             </tfoot>

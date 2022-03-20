@@ -9,37 +9,30 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page"
-                       href="${pageContext.request.contextPath}/home">Home</a>
+                       href="${pageContext.request.contextPath}/home"><fmt:message key="admin.header.homepage"/></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu
+                       data-bs-toggle="dropdown" aria-expanded="false"><fmt:message key="admin.header.menu"/>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities">Activities</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories">Categories</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users">Users</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/requests">Requests</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/monitoring">Monitoring</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="navbar-nav col-1 ms-auto mb-2 mb-lg-0 me-5">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        ${sessionScope.user.username}
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li>
-                            <form action="${pageContext.request.contextPath}/quit" method="post">
-                                <input class="dropdown-item" type="submit" value="Quit">
-                            </form>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities"><fmt:message
+                                key="admin.header.activities"/></a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/categories"><fmt:message
+                                key="admin.header.categories"/></a>
+                        </li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/users"><fmt:message
+                                key="admin.header.users"/></a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/requests"><fmt:message
+                                key="admin.header.requests"/></a>
+                        </li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/monitoring"><fmt:message
+                                key="admin.header.monitoring"/></a>
                         </li>
                     </ul>
                 </li>
             </ul>
+            <%@include file="../other/lang-quit.jsp" %>
         </div>
     </div>
 </nav>

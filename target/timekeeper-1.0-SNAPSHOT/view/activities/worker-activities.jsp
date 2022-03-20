@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<fmt:setLocale value="${cookie.lang.value}" />
+<fmt:setBundle basename="messages"/>
 <!doctype html>
-<html lang="en">
+<html lang="${cookie.lang.value}">
 <head>
     <title>Activities</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">

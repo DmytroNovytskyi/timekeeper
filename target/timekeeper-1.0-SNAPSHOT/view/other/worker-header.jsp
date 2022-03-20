@@ -24,21 +24,7 @@
                     </ul>
                 </li>
             </ul>
-            <ul class="navbar-nav col-1 ms-auto mb-2 mb-lg-0 me-5">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        ${sessionScope.user.username}
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li>
-                            <form action="${pageContext.request.contextPath}/quit" method="post">
-                                <input class="dropdown-item" type="submit" value="Quit">
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+            <%@include file="../other/lang-quit.jsp" %>
         </div>
     </div>
 </nav>

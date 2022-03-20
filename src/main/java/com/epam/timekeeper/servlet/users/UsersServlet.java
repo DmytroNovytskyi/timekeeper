@@ -50,4 +50,9 @@ public class UsersServlet extends HttpServlet {
             response.sendRedirect(getServletContext().getContextPath() + HOME);
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.sendRedirect(getServletContext().getContextPath() + USERS);
+    }
 }

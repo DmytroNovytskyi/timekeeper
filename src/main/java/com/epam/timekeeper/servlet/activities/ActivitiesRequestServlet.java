@@ -51,21 +51,23 @@ public class ActivitiesRequestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserHasActivityService userHasActivityService = new UserHasActivityService();
-        HttpSession session = request.getSession();
-        UserDTO user = (UserDTO) session.getAttribute("user");
-        String activityId = request.getParameter("id");
-        String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doPost -> ";
-        try {
-            userHasActivityService.requestActivity(createDTO(user, Integer.parseInt(activityId)));
-            session.setAttribute("successMessage", SUCCESS_REQUEST_MESSAGE);
-            LOGGER.info(logHeader + "Successfully complete.");
-        } catch (AlreadyExistsException e) {
-            LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-            session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE);
-        } catch (DBException e) {
-            LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+        if (request.getParameter("lang") == null) {
+            UserHasActivityService userHasActivityService = new UserHasActivityService();
+            HttpSession session = request.getSession();
+            UserDTO user = (UserDTO) session.getAttribute("user");
+            String activityId = request.getParameter("id");
+            String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doPost -> ";
+            try {
+                userHasActivityService.requestActivity(createDTO(user, Integer.parseInt(activityId)));
+                session.setAttribute("successMessage", SUCCESS_REQUEST_MESSAGE);
+                LOGGER.info(logHeader + "Successfully complete.");
+            } catch (AlreadyExistsException e) {
+                LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
+                session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE);
+            } catch (DBException e) {
+                LOGGER.error(logHeader + "DBException: " + e.getMessage());
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + ACTIVITIES_REQUEST);
     }
