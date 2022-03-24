@@ -6,7 +6,7 @@
 <!doctype html>
 <html lang="${cookie.lang.value}">
 <head>
-    <title>Monitoring</title>
+    <title><fmt:message key="admin.monitoring.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
@@ -24,9 +24,29 @@
             const table = $('#dataTable').DataTable(
                 {
 
-                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
                     "language": {
-                        "emptyTable": "Nothing to monitor"
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
                     },
                     "columnDefs": [
                         {
@@ -114,9 +134,9 @@
             <div class="col-4">
                 <c:choose>
                     <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
-                        <label for="firstSelect">User</label>
+                        <label for="firstSelect"><fmt:message key="admin.monitoring.user"/></label>
                         <select id="firstSelect" class="js-example-basic-single" multiple="multiple">
-                            <option disabled>Chose user...</option>
+                            <option disabled><fmt:message key="admin.monitoring.chooseUser"/></option>
                         </select>
                     </c:when>
                     <c:otherwise>
@@ -128,25 +148,25 @@
                 </c:choose>
             </div>
             <div class="col-4">
-                <label for="activitySelect">Activity</label>
+                <label for="activitySelect"><fmt:message key="admin.monitoring.activity"/></label>
                 <select id="activitySelect" class="js-example-basic-single" multiple="multiple">
-                    <option disabled>Chose activity...</option>
+                    <option disabled><fmt:message key="admin.monitoring.chooseActivity"/></option>
                 </select>
             </div>
             <div class="col-4">
-                <label for="statusSelect">Status</label>
+                <label for="statusSelect"><fmt:message key="admin.monitoring.status"/></label>
                 <select id="statusSelect" class="js-example-basic-single" multiple="multiple">
-                    <option disabled>Chose status...</option>
+                    <option disabled><fmt:message key="admin.monitoring.chooseStatus"/></option>
                 </select>
             </div>
         </div>
         <div class="col-6 row">
             <div class="col-6">
-                <label for="min">After:</label>
+                <label for="min"><fmt:message key="admin.monitoring.after"/></label>
                 <input id="min" type="datetime-local" class="rounded border-1 h5 fw-normal">
             </div>
             <div class="col-6">
-                <label for="max">Before:</label>
+                <label for="max"><fmt:message key="admin.monitoring.before"/></label>
                 <input id="max" type="datetime-local" class="rounded border-1 h5 fw-normal">
             </div>
         </div>
@@ -157,18 +177,18 @@
             <tr>
                 <c:choose>
                     <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
-                        <th>User</th>
+                        <th><fmt:message key="admin.monitoring.user"/></th>
                     </c:when>
                     <c:otherwise>
                         <th>Category</th>
                     </c:otherwise>
                 </c:choose>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Start time</th>
-                <th>End time</th>
-                <th>Time spent</th>
-                <th>Creation date</th>
+                <th><fmt:message key="admin.monitoring.activity"/></th>
+                <th><fmt:message key="admin.monitoring.status"/></th>
+                <th><fmt:message key="admin.monitoring.startTime"/></th>
+                <th><fmt:message key="admin.monitoring.endTime"/></th>
+                <th><fmt:message key="admin.monitoring.timeSpent"/></th>
+                <th><fmt:message key="admin.monitoring.creationDate"/></th>
             </tr>
             </thead>
             <tbody>
@@ -195,18 +215,18 @@
             <tr>
                 <c:choose>
                     <c:when test="${sessionScope.user.role.name.equals('ADMIN')}">
-                        <th>User</th>
+                        <th><fmt:message key="admin.monitoring.user"/></th>
                     </c:when>
                     <c:otherwise>
                         <th>Category</th>
                     </c:otherwise>
                 </c:choose>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Start time</th>
-                <th>End time</th>
-                <th>Time spent</th>
-                <th>Creation date</th>
+                <th><fmt:message key="admin.monitoring.activity"/></th>
+                <th><fmt:message key="admin.monitoring.status"/></th>
+                <th><fmt:message key="admin.monitoring.startTime"/></th>
+                <th><fmt:message key="admin.monitoring.endTime"/></th>
+                <th><fmt:message key="admin.monitoring.timeSpent"/></th>
+                <th><fmt:message key="admin.monitoring.creationDate"/></th>
             </tr>
             </tfoot>
         </table>

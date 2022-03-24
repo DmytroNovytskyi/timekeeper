@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="${cookie.lang.value}" />
+<fmt:setLocale value="${cookie.lang.value}"/>
 <fmt:setBundle basename="messages"/>
 <!doctype html>
 <html lang="${cookie.lang.value}">
 <head>
-    <title>Requests</title>
+    <title><fmt:message key="admin.requests.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
@@ -19,7 +19,7 @@
             $('#dataTable').DataTable(
                 {
                     stateSave: true,
-                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
                     "columnDefs": [
                         {
                             "targets": [4],
@@ -27,7 +27,27 @@
                         }
                     ],
                     "language": {
-                        "emptyTable": "No requests found"
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
                     }
                 });
         });
@@ -41,10 +61,10 @@
         <table id="dataTable" class="table table-hover w-100">
             <thead>
             <tr>
-                <th>User</th>
-                <th>Category</th>
-                <th>Activity</th>
-                <th>Type</th>
+                <th><fmt:message key="admin.requests.user"/></th>
+                <th><fmt:message key="admin.requests.category"/></th>
+                <th><fmt:message key="admin.requests.activity"/></th>
+                <th><fmt:message key="admin.requests.type"/></th>
                 <th></th>
             </tr>
             </thead>
@@ -57,21 +77,34 @@
                     <td>
                         <c:choose>
                             <c:when test="${userHasActivity.status.name().equals('PENDING_ASSIGN')}">
-                                assign
+                                <fmt:message key="admin.requests.assign"/>
                             </c:when>
                             <c:otherwise>
-                                abort
+                                <fmt:message key="admin.requests.abort"/>
                             </c:otherwise>
                         </c:choose>
                     </td>
                     <td class="w-25">
                         <div class="d-flex flex-row">
-                            <form class="w-100 d-inline-flex" action="requests/process" method="post">
-                                <input class="btn btn-outline-success rounded-0 w-50 m-1" name="action"
-                                       type="submit" value="Approve">
-                                <input class="btn btn-outline-danger rounded-0 w-50 m-1" name="action"
-                                       type="submit" value="Decline">
+                            <form class="w-50 d-inline-flex" action="requests/process" method="post">
+                                <input class="btn btn-outline-success rounded-0 w-100 m-1" type="submit"
+                                       value=<fmt:message key="admin.requests.approve"/>>
                                 <input type="hidden" name="id" value="${userHasActivity.id}">
+                                <input type="hidden" name="action" value="approve">
+                                <c:choose>
+                                    <c:when test="${userHasActivity.status.name().equals('PENDING_ASSIGN')}">
+                                        <input type="hidden" name="type" value="assign">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="hidden" name="type" value="abort">
+                                    </c:otherwise>
+                                </c:choose>
+                            </form>
+                            <form class="w-50 d-inline-flex" action="requests/process" method="post">
+                                <input class="btn btn-outline-danger rounded-0 w-100 m-1" type="submit" value=
+                                    <fmt:message key="admin.requests.decline"/>>
+                                <input type="hidden" name="id" value="${userHasActivity.id}">
+                                <input type="hidden" name="action" value="decline">
                                 <c:choose>
                                     <c:when test="${userHasActivity.status.name().equals('PENDING_ASSIGN')}">
                                         <input type="hidden" name="type" value="assign">
@@ -88,10 +121,10 @@
             </tbody>
             <tfoot>
             <tr>
-                <th>User</th>
-                <th>Category</th>
-                <th>Activity</th>
-                <th>Type</th>
+                <th><fmt:message key="admin.requests.user"/></th>
+                <th><fmt:message key="admin.requests.category"/></th>
+                <th><fmt:message key="admin.requests.activity"/></th>
+                <th><fmt:message key="admin.requests.type"/></th>
                 <th></th>
             </tr>
             </tfoot>

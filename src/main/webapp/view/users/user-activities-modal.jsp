@@ -2,15 +2,15 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">${user.username} activities</h4>
+                <h4 class="modal-title">${user.username}</h4>
             </div>
             <div class="modal-body">
                 <table class="userTable table table-hover w-100 text-break">
                     <thead>
                     <tr>
-                        <th>Category</th>
-                        <th>Activity</th>
-                        <th>Total time spent</th>
+                        <th><fmt:message key="admin.users.category"/></th>
+                        <th><fmt:message key="admin.users.activity"/></th>
+                        <th><fmt:message key="admin.users.totalTimeSpent"/></th>
                     </tr>
                     </thead>
                     <tbody>

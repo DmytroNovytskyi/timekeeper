@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="${cookie.lang.value}" />
+<fmt:setLocale value="${cookie.lang.value}"/>
 <fmt:setBundle basename="messages"/>
 <!doctype html>
 <html lang="${cookie.lang.value}">
 <head>
-    <title>Users</title>
+    <title><fmt:message key="admin.users.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
@@ -20,13 +20,36 @@
             const table = $('#dataTable').DataTable(
                 {
                     stateSave: true,
-                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
                     "columnDefs": [
                         {
                             "targets": [4],
                             orderable: false
                         }
-                    ]
+                    ],
+                    "language": {
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
+                    }
                 });
             const checkbox = document.getElementById("check");
             checkbox.checked = sessionStorage.users_check === 'true';
@@ -70,6 +93,34 @@
                 $(this).find('#passwordUpdate').val('')
             })
 
+            $('.userTable').DataTable(
+                {
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
+                    "language": {
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
+                    }
+                });
+
             $('.modalForm').on('submit', function (event) {
                 if (!$(this)[0].checkValidity()) {
                     event.preventDefault()
@@ -86,10 +137,10 @@
                 const passwordValue = password.val()
 
                 if (usernameValue === '') {
-                    usernameFeedback.text('Username cannot be blank')
+                    usernameFeedback.text('<fmt:message key="inputError.username.blank"/>')
                     username.removeClass('is-valid').addClass('is-invalid')
                 } else if (!/^(?=[a-zA-Z0-9._]{8,45}$)(?!.*[_.]{2})[^_.].*[^_.]$/.test(usernameValue)) {
-                    usernameFeedback.text('Username must contain minimum 8 characters maximum 45, letters and digits that may be separated with ._ symbols.')
+                    usernameFeedback.text('<fmt:message key="inputError.username.regex"/>')
                     username.removeClass('is-valid').addClass('is-invalid')
                 } else {
                     usernameFeedback.text('')
@@ -97,7 +148,7 @@
                 }
 
                 if (emailValue !== '' && !/^(?=[a-zA-Z0-9._@%-]{6,255}$)[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}$/.test(emailValue)) {
-                    emailFeedback.text('Enter email please. Example: for@example.com')
+                    emailFeedback.text('<fmt:message key="inputError.email.blankOrRegex"/>')
                     email.removeClass('is-valid').addClass('is-invalid')
                 } else {
                     emailFeedback.text('')
@@ -105,10 +156,10 @@
                 }
 
                 if (password.attr('required') === 'required' && passwordValue === '') {
-                    passwordFeedback.text('Password cannot be blank')
+                    passwordFeedback.text('<fmt:message key="inputError.password.blank"/>')
                     password.removeClass('is-valid').addClass('is-invalid')
                 } else if (passwordValue !== '' && !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,32}$/.test(passwordValue)) {
-                    passwordFeedback.text('Password must contain minimum 8 characters maximum 32, at least one letter, one number and one special character')
+                    passwordFeedback.text('<fmt:message key="inputError.password.regex"/>')
                     password.removeClass('is-valid').addClass('is-invalid')
                 } else {
                     passwordFeedback.text('')
@@ -121,11 +172,6 @@
                 const selector = '.activitiesModal' + $(this).attr('id')
                 $(selector).modal('toggle')
             })
-
-            $('.userTable').DataTable(
-                {
-                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-                });
         });
     </script>
 </head>
@@ -138,20 +184,21 @@
     <div class="row col-12 mb-3">
         <div class="form-check w-auto">
             <input id="check" type="checkbox" class="btn-check" name="activeOnly" value="ACTIVE" autocomplete="off">
-            <label for="check" class="btn btn-outline-success">Active only</label>
+            <label for="check" class="btn btn-outline-success"><fmt:message key="admin.users.activeOnly"/></label>
         </div>
         <div class="w-auto">
-            <button id="newButton" type="button" class="btn btn-outline-info">New user</button>
+            <button id="newButton" type="button" class="btn btn-outline-info"><fmt:message
+                    key="admin.users.newUser"/></button>
         </div>
     </div>
     <div class="row col-12">
         <table id="dataTable" class="table table-hover w-100 text-break">
             <thead>
             <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Status</th>
+                <th><fmt:message key="admin.users.username"/></th>
+                <th><fmt:message key="admin.users.role"/></th>
+                <th><fmt:message key="admin.users.email"/></th>
+                <th><fmt:message key="admin.users.status"/></th>
                 <th></th>
             </tr>
             </thead>
@@ -162,29 +209,30 @@
                     <td>${user.role.name.toLowerCase()}</td>
                     <td>${user.email}</td>
                     <td class="text-lowercase">${user.status}</td>
-                    <td class="w-25">
+                    <td class="w-auto">
                         <div class="d-flex flex-row justify-content-center">
                             <div class="col-4 m-1">
                                 <button id="${user.id}" type="button"
-                                        class="updateButton btn btn-outline-warning rounded-0 w-100">Update
+                                        class="updateButton btn btn-outline-warning rounded-0 w-100"><fmt:message
+                                        key="admin.users.update"/>
                                 </button>
                             </div>
                             <div class="col-4 m-1">
                                 <c:choose>
                                     <c:when test="${user.equals(sessionScope.user)}">
-                                        <div class="btn disabled w-100">This user</div>
+                                        <div class="btn disabled w-100"><fmt:message key="admin.users.thisUser"/></div>
                                     </c:when>
                                     <c:when test="${user.status.name().equals('ACTIVE')}">
                                         <form action="users/ban" method="post">
                                             <input class="btn btn-outline-danger rounded-0 w-100"
-                                                   type="submit" value="Ban">
+                                                   type="submit" value=<fmt:message key="admin.users.ban"/>>
                                             <input type="hidden" name="id" value="${user.id}">
                                         </form>
                                     </c:when>
                                     <c:otherwise>
                                         <form action="users/unban" method="post">
                                             <input class="btn btn-outline-success rounded-0 w-100"
-                                                   type="submit" value="Unban">
+                                                   type="submit" value=<fmt:message key="admin.users.unban"/>>
                                             <input type="hidden" name="id" value="${user.id}">
                                         </form>
                                     </c:otherwise>
@@ -193,7 +241,8 @@
                             <div class="col-4 m-1">
                                 <c:if test="${not user.role.name.equals('ADMIN')}">
                                     <button id="${user.id}" type="button"
-                                            class="activitiesButton btn btn-outline-info rounded-0 w-100">Statistics
+                                            class="activitiesButton btn btn-outline-info rounded-0 w-100"><fmt:message
+                                            key="admin.users.statistics"/>
                                     </button>
                                     <%@include file="user-activities-modal.jsp" %>
                                 </c:if>
@@ -205,10 +254,10 @@
             </tbody>
             <tfoot>
             <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Status</th>
+                <th><fmt:message key="admin.users.username"/></th>
+                <th><fmt:message key="admin.users.role"/></th>
+                <th><fmt:message key="admin.users.email"/></th>
+                <th><fmt:message key="admin.users.status"/></th>
                 <th></th>
             </tr>
             </tfoot>

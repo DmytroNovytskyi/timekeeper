@@ -2,21 +2,23 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Update user</h4>
+                <h4 class="modal-title"><fmt:message key="admin.users.modal.updateTitle"/></h4>
             </div>
             <div class="modal-body">
                 <form class="row g-3 modalForm"
                       action="users/update" method="post" novalidate>
                     <div class="col-12 mb-3">
-                        <label for="usernameUpdate" class="form-label">Username</label>
+                        <label for="usernameUpdate" class="form-label"><fmt:message
+                                key="admin.users.modal.username"/></label>
                         <input id="usernameUpdate" class="form-control username" name="username"
                                required pattern="^(?=[a-zA-Z0-9._]{8,45}$)(?!.*[_.]{2})[^_.].*[^_.]$">
                         <div class="username-feedback invalid-feedback"></div>
-                        <label for="emailUpdate" class="form-label">Email</label>
+                        <label for="emailUpdate" class="form-label"><fmt:message key="admin.users.modal.email"/></label>
                         <input id="emailUpdate" class="form-control email" name="email"
                                pattern="^(?=[a-zA-Z0-9._@%-]{6,255}$)[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,64}$">
                         <div class="email-feedback invalid-feedback"></div>
-                        <label for="passwordUpdate" class="form-label">Password</label>
+                        <label for="passwordUpdate" class="form-label"><fmt:message
+                                key="admin.users.modal.password"/></label>
                         <input id="passwordUpdate" type="password"
                                class="form-control password" name="password"
                                pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,32}$">
@@ -26,10 +28,11 @@
                     <div class="col-12">
                         <button type="button"
                                 class="btn col-5 btn-outline-danger float-start"
-                                data-bs-dismiss="modal">Cancel
+                                data-bs-dismiss="modal"><fmt:message key="admin.users.modal.cancel"/>
                         </button>
                         <button type="submit"
-                                class="btn col-5 btn-outline-success float-end">Save
+                                class="btn col-5 btn-outline-success float-end"><fmt:message
+                                key="admin.users.modal.save"/>
                         </button>
                     </div>
                 </form>

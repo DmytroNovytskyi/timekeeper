@@ -33,16 +33,16 @@ public class ProcessRequestServlet extends HttpServlet {
             userHasActivity.setId(Integer.parseInt(request.getParameter("id")));
             if (user.getRole().getName().equals("ADMIN")) {
                 String action = request.getParameter("action");
-                if (action.equals("Approve") && type.equals("assign")) {
+                if (action.equals("approve") && type.equals("assign")) {
                     userHasActivityService.approveAssign(userHasActivity);
                     LOGGER.info(logHeader + "Approve assign successfully complete.");
-                } else if (action.equals("Approve") && type.equals("abort")) {
+                } else if (action.equals("approve") && type.equals("abort")) {
                     userHasActivityService.approveAbort(userHasActivity);
                     LOGGER.info(logHeader + "Approve abort successfully complete.");
-                } else if (action.equals("Decline") && type.equals("assign")) {
+                } else if (action.equals("decline") && type.equals("assign")) {
                     userHasActivityService.declineAssign(userHasActivity);
                     LOGGER.info(logHeader + "Decline assign successfully complete.");
-                } else if (action.equals("Decline") && type.equals("abort")) {
+                } else if (action.equals("decline") && type.equals("abort")) {
                     userHasActivityService.declineAbort(userHasActivity);
                     LOGGER.info(logHeader + "Decline abort successfully complete.");
                 }
