@@ -140,9 +140,9 @@
                         </select>
                     </c:when>
                     <c:otherwise>
-                        <label for="firstSelect">Category</label>
+                        <label for="firstSelect"><fmt:message key="worker.monitoring.category"/></label>
                         <select id="firstSelect" class="js-example-basic-single" multiple="multiple">
-                            <option disabled>Chose category...</option>
+                            <option disabled><fmt:message key="worker.monitoring.chooseCategory"/></option>
                         </select>
                     </c:otherwise>
                 </c:choose>
@@ -180,7 +180,7 @@
                         <th><fmt:message key="admin.monitoring.user"/></th>
                     </c:when>
                     <c:otherwise>
-                        <th>Category</th>
+                        <th><fmt:message key="worker.monitoring.category"/></th>
                     </c:otherwise>
                 </c:choose>
                 <th><fmt:message key="admin.monitoring.activity"/></th>
@@ -218,7 +218,7 @@
                         <th><fmt:message key="admin.monitoring.user"/></th>
                     </c:when>
                     <c:otherwise>
-                        <th>Category</th>
+                        <th><fmt:message key="worker.monitoring.category"/></th>
                     </c:otherwise>
                 </c:choose>
                 <th><fmt:message key="admin.monitoring.activity"/></th>

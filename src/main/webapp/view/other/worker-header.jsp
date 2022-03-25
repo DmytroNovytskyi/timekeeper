@@ -9,18 +9,23 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page"
-                       href="${pageContext.request.contextPath}/home">Home</a>
+                       href="${pageContext.request.contextPath}/home"><fmt:message key="worker.header.homepage"/></a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Menu
-                    </a>
+                       data-bs-toggle="dropdown" aria-expanded="false"><fmt:message key="worker.header.menu"/></a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities">My activities</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/requests">My requests</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities/request">Request activity</a></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/monitoring">Monitoring</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/activities"><fmt:message
+                                key="worker.header.myActivities"/></a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/requests"><fmt:message
+                                key="worker.header.myRequests"/></a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               href="${pageContext.request.contextPath}/activities/request"><fmt:message
+                                key="worker.header.requestActivity"/></a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/monitoring"><fmt:message
+                                key="worker.header.monitoring"/></a>
+                        </li>
                     </ul>
                 </li>
             </ul>

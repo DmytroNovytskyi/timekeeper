@@ -6,7 +6,7 @@
 <!doctype html>
 <html lang="${cookie.lang.value}">
 <head>
-    <title>Activities</title>
+    <title><fmt:message key="worker.activities.request.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
@@ -19,7 +19,7 @@
             $('#dataTable').DataTable(
                 {
                     stateSave: true,
-                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
                     "columnDefs": [
                         {
                             "targets": [2],
@@ -27,7 +27,27 @@
                         }
                     ],
                     "language": {
-                        "emptyTable": "No free activities found"
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
                     }
                 });
         });
@@ -41,8 +61,8 @@
         <table id="dataTable" class="table table-hover w-100">
             <thead>
             <tr>
-                <th>Category</th>
-                <th>Activity</th>
+                <th><fmt:message key="worker.activities.request.category"/></th>
+                <th><fmt:message key="worker.activities.request.activity"/></th>
                 <th></th>
             </tr>
             </thead>
@@ -54,7 +74,7 @@
                     <td class="w-25">
                         <form class="w-100" action="request" method="post">
                             <input class="btn btn-outline-success rounded-0 w-100 m-1"
-                                   type="submit" value="Request">
+                                   type="submit" value="<fmt:message key="worker.activities.request.request"/>">
                             <input type="hidden" name="id" value="${activity.id}">
                         </form>
                     </td>
@@ -63,8 +83,8 @@
             </tbody>
             <tfoot>
             <tr>
-                <th>Category</th>
-                <th>Activity</th>
+                <th><fmt:message key="worker.activities.request.category"/></th>
+                <th><fmt:message key="worker.activities.request.activity"/></th>
                 <th></th>
             </tr>
             </tfoot>

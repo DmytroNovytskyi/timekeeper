@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="${cookie.lang.value}" />
+<fmt:setLocale value="${cookie.lang.value}"/>
 <fmt:setBundle basename="messages"/>
 <!doctype html>
 <html lang="${cookie.lang.value}">
 <head>
-    <title>Activities</title>
+    <title><fmt:message key="worker.activities.title"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dataTables.bootstrap5.min.css"/>
@@ -20,7 +20,7 @@
             $('#dataTable').DataTable(
                 {
                     stateSave: true,
-                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
                     "columnDefs": [
                         {
                             "targets": [4],
@@ -32,10 +32,30 @@
                         }
                     ],
                     "language": {
-                        "emptyTable": "No active activities found"
+                        "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
+                        "info": "<fmt:message key="datatable.info"/>",
+                        "infoEmpty": "<fmt:message key="datatable.infoEmpty"/>",
+                        "infoFiltered": "<fmt:message key="datatable.infoFiltered"/>",
+                        "infoPostFix": "<fmt:message key="datatable.infoPostFix"/>",
+                        "thousands": "<fmt:message key="datatable.thousands"/>",
+                        "lengthMenu": "<fmt:message key="datatable.lengthMenu"/>",
+                        "loadingRecords": "<fmt:message key="datatable.loadingRecords"/>",
+                        "processing": "<fmt:message key="datatable.processing"/>",
+                        "search": "<fmt:message key="datatable.search"/>",
+                        "zeroRecords": "<fmt:message key="datatable.zeroRecords"/>",
+                        "paginate": {
+                            "first": "<fmt:message key="datatable.first"/>",
+                            "last": "<fmt:message key="datatable.last"/>",
+                            "next": "<fmt:message key="datatable.next"/>",
+                            "previous": "<fmt:message key="datatable.previous"/>"
+                        },
+                        "aria": {
+                            "sortAscending": "<fmt:message key="datatable.sortAscending"/>",
+                            "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
+                        }
                     }
                 });
-        });
+        })
     </script>
 </head>
 <body>
@@ -46,10 +66,10 @@
         <table id="dataTable" class="table table-hover w-100">
             <thead>
             <tr>
-                <th>Category</th>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Start time</th>
+                <th><fmt:message key="worker.activities.category"/></th>
+                <th><fmt:message key="worker.activities.activity"/></th>
+                <th><fmt:message key="worker.activities.status"/></th>
+                <th><fmt:message key="worker.activities.startTime"/></th>
                 <th></th>
             </tr>
             </thead>
@@ -60,33 +80,43 @@
                     <td>${userHasActivity.activity.name}</td>
                     <c:choose>
                         <c:when test="${userHasActivity.status.name().equals('ASSIGNED')}">
-                            <td>Assigned</td>
+                            <td><fmt:message key="worker.activities.assigned"/></td>
                             <td>-</td>
                             <td class="w-25">
-                                <form action="activities/process" method="post">
-                                    <div class="d-flex flex-row">
-                                        <input class="btn btn-outline-success rounded-0 w-50 m-1"
-                                               type="submit" name="action" value="Start">
-                                        <input class="btn btn-outline-danger rounded-0 w-50 m-1"
-                                               type="submit" name="action" value="Abort">
-                                    </div>
-                                    <input type="hidden" name="id" value="${userHasActivity.id}">
-                                </form>
+                                <div class="d-flex flex-row">
+                                    <form class="w-50 d-inline-flex" action="activities/process" method="post">
+                                        <input class="btn btn-outline-success rounded-0 w-100 m-1" type="submit" value=
+                                            <fmt:message key="worker.activities.start"/>>
+                                        <input type="hidden" name="action" value="start">
+                                        <input type="hidden" name="id" value="${userHasActivity.id}">
+                                    </form>
+                                    <form class="w-50 d-inline-flex" action="activities/process" method="post">
+                                        <input class="btn btn-outline-danger rounded-0 w-100 m-1" type="submit" value=
+                                            <fmt:message key="worker.activities.abort"/>>
+                                        <input type="hidden" name="action" value="abort">
+                                        <input type="hidden" name="id" value="${userHasActivity.id}">
+                                    </form>
+                                </div>
                             </td>
                         </c:when>
                         <c:otherwise>
-                            <td>In progress</td>
+                            <td><fmt:message key="worker.activities.inProgress"/></td>
                             <td><fmt:formatDate value="${userHasActivity.startTime}" pattern="dd-MM-yy HH:mm:ss"/></td>
                             <td class="w-25">
-                                <form action="activities/process" method="post">
-                                    <div class="d-flex flex-row">
-                                        <input class="btn btn-outline-success rounded-0 w-50 m-1"
-                                               type="submit" name="action" value="End">
-                                        <input class="btn btn-outline-danger rounded-0 w-50 m-1"
-                                               type="submit" name="action" value="Abort">
+                                <div class="d-flex flex-row">
+                                    <form class="w-50 d-inline-flex" action="activities/process" method="post">
+                                        <input class="btn btn-outline-success rounded-0 w-100 m-1"
+                                               type="submit" value=<fmt:message key="worker.activities.end"/>>
+                                        <input type="hidden" name="action" value="end">
                                         <input type="hidden" name="id" value="${userHasActivity.id}">
-                                    </div>
-                                </form>
+                                    </form>
+                                    <form class="w-50 d-inline-flex" action="activities/process" method="post">
+                                        <input class="btn btn-outline-danger rounded-0 w-100 m-1"
+                                               type="submit" value=<fmt:message key="worker.activities.abort"/>>
+                                        <input type="hidden" name="action" value="abort">
+                                        <input type="hidden" name="id" value="${userHasActivity.id}">
+                                    </form>
+                                </div>
                             </td>
                         </c:otherwise>
                     </c:choose>
@@ -95,10 +125,10 @@
             </tbody>
             <tfoot>
             <tr>
-                <th>Category</th>
-                <th>Activity</th>
-                <th>Status</th>
-                <th>Start time</th>
+                <th><fmt:message key="worker.activities.category"/></th>
+                <th><fmt:message key="worker.activities.activity"/></th>
+                <th><fmt:message key="worker.activities.status"/></th>
+                <th><fmt:message key="worker.activities.startTime"/></th>
                 <th></th>
             </tr>
             </tfoot>

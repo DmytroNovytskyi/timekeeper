@@ -51,7 +51,6 @@
                             "sortDescending": "<fmt:message key="datatable.sortDescending"/>"
                         }
                     }
-
                 });
 
             const checkbox = document.getElementById("check");

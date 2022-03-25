@@ -31,7 +31,7 @@
         <ul class="dropdown-menu" aria-labelledby="userDropdown">
             <li>
                 <form action="${pageContext.request.contextPath}/quit" method="post">
-                    <input class="dropdown-item" type="submit" value=<fmt:message key="admin.header.logout"/>>
+                    <input class="dropdown-item" type="submit" value=<fmt:message key="header.logout"/>>
                 </form>
             </li>
         </ul>

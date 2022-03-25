@@ -34,17 +34,17 @@ public class ActivityProcessServlet extends HttpServlet {
         String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
         try {
             switch (action) {
-                case "Start" -> {
+                case "start" -> {
                     userHasActivityService.start(userHasActivity);
                     session.setAttribute("successMessage", SUCCESS_START_MESSAGE);
                     LOGGER.info(logHeader + "Start successfully complete.");
                 }
-                case "End" -> {
+                case "end" -> {
                     userHasActivityService.end(userHasActivity);
                     session.setAttribute("successMessage", SUCCESS_END_MESSAGE);
                     LOGGER.info(logHeader + "End successfully complete.");
                 }
-                case "Abort" -> {
+                case "abort" -> {
                     userHasActivityService.requestAbort(userHasActivity);
                     session.setAttribute("successMessage", SUCCESS_ABORT_MESSAGE);
                     LOGGER.info(logHeader + "Abort successfully complete.");
