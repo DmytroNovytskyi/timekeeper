@@ -76,6 +76,7 @@ public class ActivityService {
         }
         entity.setCategoryID(activity.getCategory().getId());
         entity.setName(activity.getName());
+        entity.setDescription(activity.getDescription());
         activityDAO.update(entity);
     }
 

@@ -11,10 +11,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
@@ -25,29 +28,50 @@ public class CategoryUpdateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
-        HttpSession session = request.getSession();
         String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
         if (name.matches(CATEGORY_NAME_REGEX)) {
             try {
                 CategoryService categoryService = new CategoryService();
                 categoryService.update(createDTO(id, name));
-                session.setAttribute("successMessage", SUCCESS_UPDATE_MESSAGE);
                 LOGGER.info(logHeader + "Successfully complete.");
+                if(lang.equals("en")) {
+                    session.setAttribute("successMessage", SUCCESS_UPDATE_MESSAGE);
+                } else {
+                    session.setAttribute("successMessage", SUCCESS_UPDATE_MESSAGE_UA);
+                }
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-                session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
+                } else {
+                    session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE_UA);
+                }
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                } else {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+                }
             } catch (ObjectNotFoundException e) {
                 LOGGER.error(logHeader + "ObjectNotFoundException: " + e.getMessage());
-                session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
+                } else {
+                    session.setAttribute("warningMessage", NOT_FOUND_MESSAGE_UA);
+                }
             }
         } else {
             LOGGER.error(logHeader + "Passed data doesn't meet the requirements of category name: " + CATEGORY_NAME_REGEX);
-            session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE_UA);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + CATEGORIES);
     }

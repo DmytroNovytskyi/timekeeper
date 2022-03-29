@@ -5,8 +5,8 @@ public interface SQL {
     interface Activity {
 
         String CREATE = """
-                INSERT INTO activity (category_id, name)
-                VALUES (?, ?);""";
+                INSERT INTO activity (category_id, name, description)
+                VALUES (?, ?, ?);""";
         String READ_ALL = """
                 SELECT *
                 FROM activity;""";
@@ -18,7 +18,8 @@ public interface SQL {
                 UPDATE activity
                 SET category_id = ?,
                     name        = ?,
-                    status      = ?
+                    status      = ?,
+                    description = ?
                     WHERE id = ?;""";
         String DELETE_BY_ID = """
                 DELETE

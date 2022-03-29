@@ -9,10 +9,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.DTO_CONVERSION_MESSAGE;
+import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.DTO_CONVERSION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Requests.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
@@ -24,6 +27,7 @@ public class ProcessRequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         UserHasActivityService userHasActivityService = new UserHasActivityService();
         String type = request.getParameter("type");
         UserDTO user = (UserDTO) session.getAttribute("user");
@@ -55,10 +59,18 @@ public class ProcessRequestServlet extends HttpServlet {
                     LOGGER.info(logHeader + "Cancel abort successfully complete.");
                 }
             }
-            session.setAttribute("successMessage", SUCCESS_PROCESS_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("successMessage", SUCCESS_PROCESS_MESSAGE);
+            } else {
+                session.setAttribute("successMessage", SUCCESS_PROCESS_MESSAGE_UA);
+            }
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + REQUESTS);
     }

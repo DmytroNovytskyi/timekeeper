@@ -14,6 +14,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ public class ActivitiesRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionToRequestMessageMapper.map(request);
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         UserDTO user = (UserDTO) session.getAttribute("user");
         String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doGet -> ";
         try {
@@ -40,11 +43,20 @@ public class ActivitiesRequestServlet extends HttpServlet {
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + HOME);
+
         } catch (DTOConversionException e) {
             LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
-            session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + HOME);
         }
     }
@@ -54,19 +66,32 @@ public class ActivitiesRequestServlet extends HttpServlet {
         if (request.getParameter("lang") == null) {
             UserHasActivityService userHasActivityService = new UserHasActivityService();
             HttpSession session = request.getSession();
+            String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
             UserDTO user = (UserDTO) session.getAttribute("user");
             String activityId = request.getParameter("id");
             String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doPost -> ";
             try {
                 userHasActivityService.requestActivity(createDTO(user, Integer.parseInt(activityId)));
-                session.setAttribute("successMessage", SUCCESS_REQUEST_MESSAGE);
                 LOGGER.info(logHeader + "Successfully complete.");
+                if(lang.equals("en")) {
+                    session.setAttribute("successMessage", SUCCESS_REQUEST_MESSAGE);
+                } else {
+                    session.setAttribute("successMessage", SUCCESS_REQUEST_MESSAGE_UA);
+                }
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-                session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE);
+                } else {
+                    session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE_UA);
+                }
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                } else {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+                }
             }
         }
         response.sendRedirect(getServletContext().getContextPath() + ACTIVITIES_REQUEST);

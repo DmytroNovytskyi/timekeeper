@@ -10,6 +10,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,7 @@ public class ActivityCloseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         String logHeader = "session:" + session.getId() + ", username:"
                 + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
         try {
@@ -32,14 +35,26 @@ public class ActivityCloseServlet extends HttpServlet {
             ActivityDTO activityDTO = new ActivityDTO();
             activityDTO.setId(Integer.parseInt(id));
             activityService.close(activityDTO);
-            session.setAttribute("successMessage", SUCCESS_CLOSE_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("successMessage", SUCCESS_CLOSE_MESSAGE);
+            } else {
+                session.setAttribute("successMessage", SUCCESS_CLOSE_MESSAGE_UA);
+            }
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
         } catch (ObjectNotFoundException e) {
             LOGGER.error(logHeader + "ObjectNotFoundException: " + e.getMessage());
-            session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", NOT_FOUND_MESSAGE_UA);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + ACTIVITIES);
     }

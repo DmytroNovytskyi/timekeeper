@@ -10,10 +10,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Users.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
@@ -25,6 +28,7 @@ public class UserCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         int roleId = Integer.parseInt(request.getParameter("roleId"));
         String username = request.getParameter("username");
         String email = request.getParameter("email");
@@ -37,19 +41,35 @@ public class UserCreateServlet extends HttpServlet {
             try {
                 UserService userService = new UserService();
                 userService.create(createDTO(roleId, username, email), password);
-                session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE);
                 LOGGER.info(logHeader + "Successfully complete.");
+                if(lang.equals("en")) {
+                    session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE);
+                } else {
+                    session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE_UA);
+                }
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-                session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE);
+                } else {
+                    session.setAttribute("errorMessage", ALREADY_EXISTS_MESSAGE_UA);
+                }
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                } else {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+                }
             }
         } else {
             LOGGER.error(logHeader + "Passed data doesn't meet the requirements of username: " + USERNAME_REGEX
                     + " or email: " + EMAIL_REGEX + " or password: " + PASSWORD_REGEX);
-            session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE_UA);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + USERS);
     }

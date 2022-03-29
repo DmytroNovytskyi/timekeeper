@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="${cookie.lang.value}" />
+<fmt:setLocale value="${cookie.lang.value}"/>
 <fmt:setBundle basename="messages"/>
 <!doctype html>
 <html lang="${cookie.lang.value}">
@@ -50,11 +50,25 @@
                         }
                     }
                 });
+
+            $('#dataTable tbody').on('click', '.descriptionButton', function () {
+                $('#descriptionModal').data('description', $(this).attr('value')).modal('toggle')
+            })
+
+            $('#descriptionModal').on('show.bs.modal', function () {
+                let description = $(this).data('description')
+                if (description === '') {
+                    description = '<fmt:message key="message.noDescription"/>'
+                }
+                $(this).find('.modal-body').text(description)
+            })
+
         });
     </script>
 </head>
 <body>
 <%@include file="../other/worker-header.jsp" %>
+<%@include file="description-modal.jsp" %>
 <div class="container mt-3 mb-3">
     <%@include file="../other/message.jsp" %>
     <div class="row col-12">
@@ -72,11 +86,19 @@
                     <td>${activity.category.name}</td>
                     <td>${activity.name}</td>
                     <td class="w-25">
-                        <form class="w-100" action="request" method="post">
-                            <input class="btn btn-outline-success rounded-0 w-100 m-1"
-                                   type="submit" value="<fmt:message key="worker.activities.request.request"/>">
-                            <input type="hidden" name="id" value="${activity.id}">
-                        </form>
+                        <div class="d-flex flex-row">
+                            <div class="m-1">
+                                <button type="button" class="descriptionButton btn btn-outline-info"
+                                        style="border-radius: 20px; width: 40px; height: 40px"
+                                        value="${activity.description}">i
+                                </button>
+                            </div>
+                            <form class="w-auto" action="request" method="post">
+                                <input class="btn btn-outline-success rounded-0 w-100 m-1"
+                                       type="submit" value="<fmt:message key="worker.activities.request.request"/>">
+                                <input type="hidden" name="id" value="${activity.id}">
+                            </form>
+                        </div>
                     </td>
                 </tr>
             </c:forEach>

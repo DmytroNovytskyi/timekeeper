@@ -10,10 +10,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
@@ -27,6 +30,7 @@ public class CategoriesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SessionToRequestMessageMapper.map(request);
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         String logHeader = "session:" + session.getId() + ", username:"
                 + ((UserDTO) session.getAttribute("user")).getUsername() + ". doGet -> ";
         try {
@@ -36,11 +40,19 @@ public class CategoriesServlet extends HttpServlet {
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + HOME);
         } catch (DTOConversionException e) {
             LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
-            session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + HOME);
         }
     }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
 @WebFilter(filterName = "LangFilter")
 public class LangFilter implements Filter {
 
@@ -16,12 +17,18 @@ public class LangFilter implements Filter {
         String lang = request.getParameter("lang");
         HttpServletResponse res = (HttpServletResponse) response;
         Cookie cookie;
+        boolean hasLang = false;
         if (lang == null) {
-            List<Cookie> cookies = Arrays.stream(((HttpServletRequest) request).getCookies())
-                    .filter(c -> c.getName().equals("lang")).toList();
-            if (cookies.isEmpty()) {
+            Cookie[] cs = ((HttpServletRequest) request).getCookies();
+            if (cs != null) {
+                List<Cookie> cookies = Arrays.stream(cs).filter(c -> c.getName().equals("lang")).toList();
+                if (cookies.isEmpty()) {
+                    cookie = new Cookie("lang", "en");
+                } else {
+                    cookie = cookies.get(0);
+                }
+            } else {
                 cookie = new Cookie("lang", "en");
-                res.addCookie(cookie);
             }
         } else {
             if (lang.equals("English")) {
@@ -29,8 +36,8 @@ public class LangFilter implements Filter {
             } else {
                 cookie = new Cookie("lang", "ua");
             }
-            res.addCookie(cookie);
         }
+        res.addCookie(cookie);
         chain.doFilter(request, response);
     }
 

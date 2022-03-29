@@ -8,6 +8,7 @@ import com.epam.timekeeper.service.UserService;
 import com.epam.timekeeper.servlet.util.SessionToRequestMessageMapper;
 
 import java.io.*;
+import java.util.Arrays;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -15,6 +16,8 @@ import javax.servlet.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Other.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
@@ -34,6 +37,7 @@ public class AuthServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserService userService = new UserService();
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String logHeader = "session:" + session.getId() + ", username:" + username + ". doPost -> ";
@@ -45,7 +49,11 @@ public class AuthServlet extends HttpServlet {
                 user = userService.validate(user, password);
                 if (user != null) {
                     if (user.getStatus().equals(User.Status.BANNED)) {
-                        session.setAttribute("errorMessage", BANNED_USER_MESSAGE);
+                        if(lang.equals("en")) {
+                            session.setAttribute("errorMessage", BANNED_USER_MESSAGE);
+                        } else {
+                            session.setAttribute("errorMessage", BANNED_USER_MESSAGE_UA);
+                        }
                         response.sendRedirect(getServletContext().getContextPath() + AUTH);
                         LOGGER.info(logHeader + "Banned user.");
                     } else {
@@ -54,23 +62,39 @@ public class AuthServlet extends HttpServlet {
                         LOGGER.info(logHeader + "Successfully signed in.");
                     }
                 } else {
-                    session.setAttribute("errorMessage", WRONG_DATA_MESSAGE);
+                    if(lang.equals("en")) {
+                        session.setAttribute("errorMessage", WRONG_DATA_MESSAGE);
+                    } else {
+                        session.setAttribute("errorMessage", WRONG_DATA_MESSAGE_UA);
+                    }
                     response.sendRedirect(getServletContext().getContextPath() + AUTH);
                     LOGGER.info(logHeader + "Wrong username or password.");
                 }
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+                } else {
+                    session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+                }
                 response.sendRedirect(getServletContext().getContextPath() + AUTH);
             } catch (DTOConversionException e) {
                 LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
-                session.setAttribute("warningMessage", DTO_CONVERSION_MESSAGE);
+                if(lang.equals("en")) {
+                    session.setAttribute("warningMessage", DTO_CONVERSION_MESSAGE);
+                } else {
+                    session.setAttribute("warningMessage", DTO_CONVERSION_MESSAGE_UA);
+                }
                 response.sendRedirect(getServletContext().getContextPath() + AUTH);
             }
         } else {
             LOGGER.error(logHeader + "Passed data doesn't meet the requirements of username: " + USERNAME_REGEX
                     + " or password:" + PASSWORD_REGEX);
-            session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + AUTH);
         }
     }

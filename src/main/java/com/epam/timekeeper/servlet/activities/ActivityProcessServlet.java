@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class ActivityProcessServlet extends HttpServlet {
 
         UserHasActivityService userHasActivityService = new UserHasActivityService();
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         int id = Integer.parseInt(request.getParameter("id"));
         String action = request.getParameter("action");
         UserHasActivityDTO userHasActivity = new UserHasActivityDTO();
@@ -36,26 +38,46 @@ public class ActivityProcessServlet extends HttpServlet {
             switch (action) {
                 case "start" -> {
                     userHasActivityService.start(userHasActivity);
-                    session.setAttribute("successMessage", SUCCESS_START_MESSAGE);
                     LOGGER.info(logHeader + "Start successfully complete.");
+                    if(lang.equals("en")) {
+                        session.setAttribute("successMessage", SUCCESS_START_MESSAGE);
+                    } else {
+                        session.setAttribute("successMessage", SUCCESS_START_MESSAGE_UA);
+                    }
                 }
                 case "end" -> {
                     userHasActivityService.end(userHasActivity);
-                    session.setAttribute("successMessage", SUCCESS_END_MESSAGE);
                     LOGGER.info(logHeader + "End successfully complete.");
+                    if(lang.equals("en")) {
+                        session.setAttribute("successMessage", SUCCESS_END_MESSAGE);
+                    } else {
+                        session.setAttribute("successMessage", SUCCESS_END_MESSAGE_UA);
+                    }
                 }
                 case "abort" -> {
                     userHasActivityService.requestAbort(userHasActivity);
-                    session.setAttribute("successMessage", SUCCESS_ABORT_MESSAGE);
                     LOGGER.info(logHeader + "Abort successfully complete.");
+                    if(lang.equals("en")) {
+                        session.setAttribute("successMessage", SUCCESS_ABORT_MESSAGE);
+                    } else {
+                        session.setAttribute("successMessage", SUCCESS_ABORT_MESSAGE_UA);
+                    }
                 }
             }
         } catch (AlreadyExistsException e) {
             LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-            session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", REQUEST_ALREADY_EXISTS_MESSAGE_UA);
+            }
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + ACTIVITIES);
     }

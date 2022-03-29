@@ -22,8 +22,15 @@
                                 key="admin.activities.modal.activity"/></label>
                         <input id="activityUpdateName" class="form-control activityName" name="activityName"
                                required pattern="^[\sa-zA-Z0-9/.-]{8,45}$">
-                        <div class="invalid-feedback"></div>
+                        <div class="activity-feedback invalid-feedback"></div>
                         <input id="activityId" type="hidden" name="activityId">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="activityUpdateDescription" class="form-label"><fmt:message
+                                key="admin.activities.modal.description"/></label>
+                        <input id="activityUpdateDescription" class="form-control description" name="description"
+                               pattern="^.{0,256}$">
+                        <div class="description-feedback invalid-feedback"></div>
                     </div>
                     <div class="col-12">
                         <button type="button"

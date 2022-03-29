@@ -30,6 +30,7 @@ public class ActivityDTOMapper {
         dto.setCategory(CategoryDTOMapper.toDTO(category));
         dto.setName(entity.getName());
         dto.setStatus(entity.getStatus());
+        dto.setDescription(entity.getDescription());
         DAO<UserHasActivity> userHasActivityDAO = new DAO<>(new UserHasActivityPreparer(), new UserHasActivityMapper());
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
@@ -51,6 +52,7 @@ public class ActivityDTOMapper {
         }
         entity.setName(dto.getName());
         entity.setStatus(dto.getStatus());
+        entity.setDescription(dto.getDescription());
         return entity;
     }
 

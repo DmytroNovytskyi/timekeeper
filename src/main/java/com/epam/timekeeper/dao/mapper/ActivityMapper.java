@@ -15,6 +15,7 @@ public class ActivityMapper implements EntityMapper<Activity> {
         activity.setCategoryID(resultSet.getInt(++i));
         activity.setName(resultSet.getString(++i));
         activity.setStatus(Activity.Status.valueOf(resultSet.getString(++i)));
+        activity.setDescription(resultSet.getString(++i));
         return activity;
     }
 

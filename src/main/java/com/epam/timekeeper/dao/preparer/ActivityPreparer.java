@@ -14,6 +14,7 @@ public class ActivityPreparer implements Preparer<Activity> {
         int i = 0;
         statement.setInt(++i, entity.getCategoryID());
         statement.setString(++i, entity.getName());
+        statement.setString(++i , entity.getDescription());
         return statement;
     }
 
@@ -37,6 +38,7 @@ public class ActivityPreparer implements Preparer<Activity> {
         statement.setInt(++i, entity.getCategoryID());
         statement.setString(++i, entity.getName());
         statement.setString(++i, entity.getStatus().name());
+        statement.setString(++i, entity.getDescription());
         statement.setInt(++i, entity.getId());
         return statement;
     }

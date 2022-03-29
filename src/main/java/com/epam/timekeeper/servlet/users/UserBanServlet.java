@@ -9,10 +9,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
+import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Users.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
@@ -26,20 +29,33 @@ public class UserBanServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String logHeader = "session:" + session.getId() + ", username:"
                 + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         try {
             UserService userService = new UserService();
             String id = request.getParameter("id");
             UserDTO user = new UserDTO();
             user.setId(Integer.parseInt(id));
             userService.ban(user);
-            session.setAttribute("successMessage", SUCCESS_BAN_MESSAGE);
             LOGGER.info(logHeader + "Successfully complete.");
+            if(lang.equals("en")) {
+                session.setAttribute("successMessage", SUCCESS_BAN_MESSAGE);
+            } else {
+                session.setAttribute("successMessage", SUCCESS_BAN_MESSAGE_UA);
+            }
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
         } catch (ObjectNotFoundException e) {
             LOGGER.error(logHeader + "ObjectNotFoundException: " + e.getMessage());
-            session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", NOT_FOUND_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", NOT_FOUND_MESSAGE_UA);
+            }
         }
         response.sendRedirect(getServletContext().getContextPath() + USERS);
     }

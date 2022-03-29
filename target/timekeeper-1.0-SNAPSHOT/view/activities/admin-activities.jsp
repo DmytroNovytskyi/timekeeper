@@ -78,14 +78,25 @@
                     + ' class="btn-close" data-bs-dismiss="alert"></button> </div> </div>')
             }
 
-            $('#dataTable tbody').on('click', '.updateButton', function () {
+            $('#dataTable tbody').on('click', '.descriptionButton', function () {
+                $('#descriptionModal').data('description', $(this).attr('value')).modal('toggle')
+            }).on('click', '.updateButton', function () {
                 if (${empty requestScope.categories}) {
                     printCategoriesCheckMessage()
                 } else {
                     const data = table.row($(this).parents('tr')).data();
-                    const arr = [$(this).attr('id'), data[0], data[1]]
+                    const description = $(this).parents('.d-flex').children('.m-1').children('.descriptionButton').val()
+                    const arr = [$(this).attr('id'), data[0], data[1], description]
                     $('#updateModal').data('data', arr).modal('toggle')
                 }
+            })
+
+            $('#descriptionModal').on('show.bs.modal', function () {
+                let description = $(this).data('description')
+                if(description === ''){
+                    description = '<fmt:message key="message.noDescription"/>'
+                }
+                $(this).find('.modal-body').text(description)
             })
 
             $('#updateModal').on('show.bs.modal', function () {
@@ -96,6 +107,7 @@
                         $(this).attr('selected', 'selected')
                     }
                 })
+                $(this).find('#activityUpdateDescription').val(data[3])
                 const activityName = $(this).find('#activityUpdateName')
                 activityName.val(data[2])
                 activityName.removeClass('is-invalid')
@@ -111,16 +123,27 @@
                     event.stopPropagation()
                 }
                 const activity = $(this).find('.activityName')
-                const feedback = $(this).find('.invalid-feedback')
+                const description = $(this).find('.description')
+                const activityFeedback = $(this).find('.activity-feedback')
+                const descriptionFeedback = $(this).find('.description-feedback')
                 const activityValue = activity.val()
+                const descriptionValue = description.val()
+
                 if (activityValue === '') {
-                    feedback.text('<fmt:message key="inputError.activity.blank"/>')
+                    activityFeedback.text('<fmt:message key="inputError.activity.blank"/>')
                     activity.removeClass('is-valid').addClass('is-invalid')
                 } else if (!/^[\sa-zA-Z0-9/.-]{8,45}$/.test(activityValue)) {
-                    feedback.text('<fmt:message key="inputError.activity.regex"/>')
+                    activityFeedback.text('<fmt:message key="inputError.activity.regex"/>')
                     activity.removeClass('is-valid').addClass('is-invalid')
                 } else {
                     activity.removeClass('is-invalid').addClass('is-valid')
+                }
+
+                if (!/^[.]{0,256}$/.test(descriptionValue)) {
+                    descriptionFeedback.text('<fmt:message key="inputError.activityDescription.regex"/>')
+                    description.removeClass('is-valid').addClass('is-invalid')
+                } else {
+                    description.removeClass('is-invalid').addClass('is-valid')
                 }
                 $(this).addClass('was-validated')
             })
@@ -131,6 +154,7 @@
 <%@include file="../other/admin-header.jsp" %>
 <%@include file="activity-create-modal.jsp" %>
 <%@include file="activity-update-modal.jsp" %>
+<%@include file="description-modal.jsp" %>
 <div class="container mt-3 mb-3 shadow p-5">
     <div id="messageRow" class="row col-12">
         <%@include file="../other/message.jsp" %>
@@ -165,6 +189,11 @@
                     <td>${activity.userCount}</td>
                     <td class="w-25">
                         <div class="d-flex flex-row">
+                            <div class="m-1">
+                                <button type="button" class="descriptionButton btn btn-outline-info"
+                                        style="border-radius: 20px; width: 40px; height: 40px" value="${activity.description}">i
+                                </button>
+                            </div>
                                 <%--                            <button id="${activity.id}" type="button"--%>
                                 <%--                                    class="updateButton btn btn-outline-warning border-0 fs-5 bg-transparent shadow-none">--%>
                                 <%--                                <i style="font-size: 1.5rem">Edit <i class="bi bi-pencil-square"></i></i>--%>
@@ -176,7 +205,7 @@
                             <c:choose>
                                 <c:when test="${activity.status.name().equals('OPENED')}">
                                     <form class="w-50" action="activities/close" method="post">
-                                        <input class="btn btn-outline-danger rounded-0 w-100 m-1"
+                                        <input class="btn btn-outline-danger rounded-0 w-100 m-1 pb-2"
                                                type="submit" value=<fmt:message key="admin.activities.close"/>>
                                             <%--                                        <button type="submit" value="Close"--%>
                                             <%--                                                class="btn btn-outline-danger border-0 fs-5 bg-transparent shadow-none">--%>
@@ -191,7 +220,7 @@
                                             <%--                                                class="btn btn-outline-success border-0 fs-5 bg-transparent shadow-none">--%>
                                             <%--                                            <i style="font-size: 1.5rem">Open <i class="bi bi-check-circle"></i></i>--%>
                                             <%--                                        </button>--%>
-                                        <input class="btn btn-outline-success rounded-0 w-100 m-1"
+                                        <input class="btn btn-outline-success rounded-0 w-100 m-1 pb-2"
                                                type="submit" value=<fmt:message key="admin.activities.open"/>>
                                         <input type="hidden" name="id" value="${activity.id}">
                                     </form>

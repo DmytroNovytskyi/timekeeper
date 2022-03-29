@@ -12,6 +12,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class ActivitiesServlet extends HttpServlet {
         UserDTO user = (UserDTO) request.getSession().getAttribute("user");
         SessionToRequestMessageMapper.map(request);
         HttpSession session = request.getSession();
+        String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doGet -> ";
         try {
             if (user.getRole().getName().equals("ADMIN")) {
@@ -46,11 +48,19 @@ public class ActivitiesServlet extends HttpServlet {
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {
             LOGGER.error(logHeader + "DBException: " + e.getMessage());
-            session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
+            } else {
+                session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + HOME);
         } catch (DTOConversionException e) {
             LOGGER.error(logHeader + "DTOConversionException: " + e.getMessage());
-            session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            if(lang.equals("en")) {
+                session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE);
+            } else {
+                session.setAttribute("errorMessage", DTO_CONVERSION_MESSAGE_UA);
+            }
             response.sendRedirect(getServletContext().getContextPath() + HOME);
         }
     }
