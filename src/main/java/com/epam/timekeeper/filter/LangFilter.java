@@ -16,28 +16,21 @@ public class LangFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         String lang = request.getParameter("lang");
         HttpServletResponse res = (HttpServletResponse) response;
+        List<Cookie> langCookies = Arrays.stream(((HttpServletRequest) request).getCookies())
+                .filter(c -> c.getName().equals("lang")).toList();
         Cookie cookie;
-        boolean hasLang = false;
-        if (lang == null) {
-            Cookie[] cs = ((HttpServletRequest) request).getCookies();
-            if (cs != null) {
-                List<Cookie> cookies = Arrays.stream(cs).filter(c -> c.getName().equals("lang")).toList();
-                if (cookies.isEmpty()) {
-                    cookie = new Cookie("lang", "en");
-                } else {
-                    cookie = cookies.get(0);
-                }
-            } else {
-                cookie = new Cookie("lang", "en");
-            }
-        } else {
+        if (langCookies.isEmpty()) {
+            cookie = new Cookie("lang", "en");
+            res.addCookie(cookie);
+        } else if (lang != null) {
+            cookie = langCookies.get(0);
             if (lang.equals("English")) {
-                cookie = new Cookie("lang", "en");
+                cookie.setValue("en");
             } else {
-                cookie = new Cookie("lang", "ua");
+                cookie.setValue("ua");
             }
+            res.addCookie(cookie);
         }
-        res.addCookie(cookie);
         chain.doFilter(request, response);
     }
 
