@@ -34,6 +34,7 @@ public interface Messages {
         String SUCCESS_ABORT_MESSAGE_UA = "Запит на скасування успішно надіслано!";
         String SUCCESS_UPDATE_MESSAGE_UA = "Активність успішно оновлена!";
         String ACTIVITY_NAME_REGEX = "^[\\sa-zA-Z0-9/.-]{8,45}$";
+        String ACTIVITY_DESCRIPTION_REGEX = "^.{0,256}$";
     }
 
     interface Categories {

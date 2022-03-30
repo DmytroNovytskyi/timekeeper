@@ -33,11 +33,11 @@ public class ActivityCreateServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
-        if (name.matches(ACTIVITY_NAME_REGEX)) {
+        if (name.matches(ACTIVITY_NAME_REGEX) && description.matches(ACTIVITY_DESCRIPTION_REGEX)) {
             try {
                 ActivityService activityService = new ActivityService();
                 activityService.create(createDTO(id, name, description));
-                if(lang.equals("en")) {
+                if (lang.equals("en")) {
                     session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE);
                 } else {
                     session.setAttribute("successMessage", SUCCESS_CREATE_MESSAGE_UA);
@@ -45,22 +45,23 @@ public class ActivityCreateServlet extends HttpServlet {
                 LOGGER.info(logHeader + "Successfully complete.");
             } catch (AlreadyExistsException e) {
                 LOGGER.error(logHeader + "AlreadyExistsException: " + e.getMessage());
-                if(lang.equals("en")) {
+                if (lang.equals("en")) {
                     session.setAttribute("errorMessage", ACTIVITY_ALREADY_EXISTS_MESSAGE);
                 } else {
                     session.setAttribute("errorMessage", ACTIVITY_ALREADY_EXISTS_MESSAGE);
                 }
             } catch (DBException e) {
                 LOGGER.error(logHeader + "DBException: " + e.getMessage());
-                if(lang.equals("en")) {
+                if (lang.equals("en")) {
                     session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE);
                 } else {
                     session.setAttribute("warningMessage", DB_EXCEPTION_MESSAGE_UA);
                 }
             }
         } else {
-            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of activity name: " + ACTIVITY_NAME_REGEX);
-            if(lang.equals("en")) {
+            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of activity name: "
+                    + ACTIVITY_NAME_REGEX + " or description:" + ACTIVITY_DESCRIPTION_REGEX);
+            if (lang.equals("en")) {
                 session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
             } else {
                 session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE_UA);

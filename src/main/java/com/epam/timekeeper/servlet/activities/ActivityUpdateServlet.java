@@ -35,7 +35,7 @@ public class ActivityUpdateServlet extends HttpServlet {
         String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         String logHeader = "session:" + session.getId() + ", username:"
                 + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
-        if (activityName.matches(ACTIVITY_NAME_REGEX)) {
+        if (activityName.matches(ACTIVITY_NAME_REGEX) && description.matches(ACTIVITY_DESCRIPTION_REGEX)) {
             try {
                 ActivityService activityService = new ActivityService();
                 activityService.update(createDTO(activityId, categoryId, activityName, description));
@@ -68,7 +68,8 @@ public class ActivityUpdateServlet extends HttpServlet {
                 }
             }
         } else {
-            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of activity name: " + ACTIVITY_NAME_REGEX);
+            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of activity name: "
+                    + ACTIVITY_NAME_REGEX + " or description:" + ACTIVITY_DESCRIPTION_REGEX);
             if(lang.equals("en")) {
                 session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
             } else {
