@@ -1,13 +1,10 @@
 package com.epam.timekeeper.service;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.ActivityMapper;
-import com.epam.timekeeper.dao.preparer.ActivityPreparer;
+import com.epam.timekeeper.dao.impl.ActivityDAOImpl;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.dto.UserHasActivityDTO;
 import com.epam.timekeeper.entity.Activity;
 import com.epam.timekeeper.dto.ActivityDTO;
-import com.epam.timekeeper.entity.Category;
 import com.epam.timekeeper.exception.ObjectNotFoundException;
 import com.epam.timekeeper.service.mapper.ActivityDTOMapper;
 
@@ -17,40 +14,40 @@ import java.util.stream.Collectors;
 
 public class ActivityService {
 
-    private final DAO<Activity> activityDAO = new DAO<>(new ActivityPreparer(), new ActivityMapper());
+    private final ActivityDAOImpl activityDAO = new ActivityDAOImpl();
 
-    public List<ActivityDTO> getAll() {
+    public List<ActivityDTO> getAll(String lang) {
         List<Activity> activities = activityDAO.readAll();
         if (activities == null) {
             return null;
         }
         return activities.stream()
-                .map(ActivityDTOMapper::toDTO)
+                .map(a -> ActivityDTOMapper.toDTO(a, lang))
                 .sorted(Comparator
                         .comparing((ActivityDTO a) -> a.getCategory().getName())
                         .thenComparing(ActivityDTO::getName))
                 .collect(Collectors.toList());
     }
 
-    public List<ActivityDTO> getAllOpened() {
+    public List<ActivityDTO> getAllOpened(String lang) {
         List<Activity> activities = activityDAO.readAll();
         if (activities == null) {
             return null;
         }
         return activities.stream()
                 .filter(a -> a.getStatus().equals(Activity.Status.OPENED))
-                .map(ActivityDTOMapper::toDTO)
+                .map(a -> ActivityDTOMapper.toDTO(a, lang))
                 .sorted(Comparator
                         .comparing((ActivityDTO a) -> a.getCategory().getName())
                         .thenComparing(ActivityDTO::getName))
                 .collect(Collectors.toList());
     }
 
-    public List<ActivityDTO> getFreeForUser(UserDTO user) {
-        List<ActivityDTO> allOpenedActivities = getAllOpened();
+    public List<ActivityDTO> getFreeForUser(UserDTO user, String lang) {
+        List<ActivityDTO> allOpenedActivities = getAllOpened(lang);
         UserHasActivityService userHasActivityService = new UserHasActivityService();
-        List<UserHasActivityDTO> activeUHAForUser = userHasActivityService.getActiveForUser(user);
-        List<UserHasActivityDTO> pendingUHAForUser = userHasActivityService.getPendingForUser(user);
+        List<UserHasActivityDTO> activeUHAForUser = userHasActivityService.getActiveForUser(user, lang);
+        List<UserHasActivityDTO> pendingUHAForUser = userHasActivityService.getPendingForUser(user, lang);
         if (activeUHAForUser != null) {
             allOpenedActivities.removeAll(userHasActivityService.mapToActivities(activeUHAForUser));
         }
@@ -62,11 +59,6 @@ public class ActivityService {
 
     public void create(ActivityDTO activity) {
         activityDAO.create(ActivityDTOMapper.toEntity(activity));
-    }
-
-    public ActivityDTO get(ActivityDTO dto) {
-        Activity entity = activityDAO.readById(dto.getId());
-        return entity == null ? null : ActivityDTOMapper.toDTO(entity);
     }
 
     public void update(ActivityDTO activity) {
@@ -97,4 +89,5 @@ public class ActivityService {
         entity.setStatus(Activity.Status.OPENED);
         activityDAO.update(entity);
     }
+
 }

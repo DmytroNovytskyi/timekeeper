@@ -1,10 +1,7 @@
 package com.epam.timekeeper.service.mapper;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.CategoryMapper;
-import com.epam.timekeeper.dao.mapper.UserHasActivityMapper;
-import com.epam.timekeeper.dao.preparer.CategoryPreparer;
-import com.epam.timekeeper.dao.preparer.UserHasActivityPreparer;
+import com.epam.timekeeper.dao.impl.CategoryDAOImpl;
+import com.epam.timekeeper.dao.impl.UserHasActivityDAOImpl;
 import com.epam.timekeeper.dto.ActivityDTO;
 import com.epam.timekeeper.dto.CategoryDTO;
 import com.epam.timekeeper.entity.Activity;
@@ -19,19 +16,19 @@ public class ActivityDTOMapper {
     private ActivityDTOMapper() {
     }
 
-    public static ActivityDTO toDTO(Activity entity) {
+    public static ActivityDTO toDTO(Activity entity, String lang) {
         ActivityDTO dto = new ActivityDTO();
-        DAO<Category> categoryDAO = new DAO<>(new CategoryPreparer(), new CategoryMapper());
+        CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
         Category category = categoryDAO.readById(entity.getCategoryID());
         if (category == null) {
             throw new DTOConversionException("Error occurred while creating ActivityDTO");
         }
         dto.setId(entity.getId());
-        dto.setCategory(CategoryDTOMapper.toDTO(category));
+        dto.setCategory(CategoryDTOMapper.toDTO(category, lang));
         dto.setName(entity.getName());
         dto.setStatus(entity.getStatus());
         dto.setDescription(entity.getDescription());
-        DAO<UserHasActivity> userHasActivityDAO = new DAO<>(new UserHasActivityPreparer(), new UserHasActivityMapper());
+        UserHasActivityDAOImpl userHasActivityDAO = new UserHasActivityDAOImpl();
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
             throw new DTOConversionException("Error occurred while creating ActivityDTO");

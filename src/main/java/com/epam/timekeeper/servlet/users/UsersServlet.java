@@ -41,7 +41,7 @@ public class UsersServlet extends HttpServlet {
             UserHasActivityService userHasActivityService = new UserHasActivityService();
             request.setAttribute("users", userService.getAll());
             request.setAttribute("roles", roleService.getAll());
-            request.setAttribute("uha", userHasActivityService.getAllWithSummary());
+            request.setAttribute("uha", userHasActivityService.getAllWithSummary(lang));
             request.getRequestDispatcher(USERS_JSP).forward(request, response);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {

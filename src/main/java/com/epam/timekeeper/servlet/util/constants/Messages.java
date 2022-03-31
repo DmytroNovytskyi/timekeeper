@@ -33,7 +33,7 @@ public interface Messages {
         String SUCCESS_END_MESSAGE_UA = "Активність успішно завершена!";
         String SUCCESS_ABORT_MESSAGE_UA = "Запит на скасування успішно надіслано!";
         String SUCCESS_UPDATE_MESSAGE_UA = "Активність успішно оновлена!";
-        String ACTIVITY_NAME_REGEX = "^[\\sa-zA-Z0-9/.-]{8,45}$";
+        String ACTIVITY_NAME_REGEX = "^[\\sa-zA-Z0-9\\/.-]{8,45}$";
         String ACTIVITY_DESCRIPTION_REGEX = "^.{0,256}$";
     }
 
@@ -56,7 +56,8 @@ public interface Messages {
         String SUCCESS_CREATE_MESSAGE_UA = "Категорію успішно створено.";
         String SUCCESS_OPEN_MESSAGE_UA = "Категорію успішно відкрито.";
         String SUCCESS_UPDATE_MESSAGE_UA = "Категорію успішно оновлено.";
-        String CATEGORY_NAME_REGEX = "^[\\sa-zA-Z0-9/.-]{8,45}$";
+        String CATEGORY_EN_NAME_REGEX = "^[\\sa-zA-Z0-9\\/.-]{8,45}$";
+        String CATEGORY_UA_NAME_REGEX = "^(|[\\sА-ЩЬЮЯҐЄІЇа-щьюяґєії0-9\\/.-]{8,45})$";
     }
 
     interface Monitoring{

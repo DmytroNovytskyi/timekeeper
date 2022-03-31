@@ -1,10 +1,7 @@
 package com.epam.timekeeper.service.mapper;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.RoleMapper;
-import com.epam.timekeeper.dao.mapper.UserMapper;
-import com.epam.timekeeper.dao.preparer.RolePreparer;
-import com.epam.timekeeper.dao.preparer.UserPreparer;
+import com.epam.timekeeper.dao.impl.RoleDAOImpl;
+import com.epam.timekeeper.dao.impl.UserDAOImpl;
 import com.epam.timekeeper.dto.RoleDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.entity.Role;
@@ -18,7 +15,7 @@ public class UserDTOMapper {
 
     public static UserDTO toDTO(User entity) {
         UserDTO dto = new UserDTO();
-        DAO<Role> roleDAO = new DAO<>(new RolePreparer(), new RoleMapper());
+        RoleDAOImpl roleDAO = new RoleDAOImpl();
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         Role role = roleDAO.readById(entity.getRoleId());
@@ -41,7 +38,7 @@ public class UserDTOMapper {
         }
         entity.setEmail(dto.getEmail());
         if (password.isEmpty()) {
-            DAO<User> userDAO = new DAO<>(new UserPreparer(), new UserMapper());
+            UserDAOImpl userDAO = new UserDAOImpl();
             password = userDAO.readById(entity.getId()).getPassword();
         }
         entity.setPassword(password);

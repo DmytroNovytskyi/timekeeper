@@ -36,10 +36,10 @@ public class RequestsServlet extends HttpServlet {
         try {
             UserHasActivityService userHasActivityService = new UserHasActivityService();
             if (user.getRole().getName().equals("ADMIN")) {
-                request.setAttribute("list", userHasActivityService.getAllPending());
+                request.setAttribute("list", userHasActivityService.getAllPending(lang));
                 request.getRequestDispatcher(ADMIN_REQUESTS_JSP).forward(request, response);
             } else {
-                request.setAttribute("list", userHasActivityService.getPendingForUser(user));
+                request.setAttribute("list", userHasActivityService.getPendingForUser(user, lang));
                 request.getRequestDispatcher(WORKER_REQUESTS_JSP).forward(request, response);
             }
             LOGGER.info(logHeader + "Successfully complete.");

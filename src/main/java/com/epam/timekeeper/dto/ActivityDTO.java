@@ -67,7 +67,8 @@ public class ActivityDTO extends DTO {
     @Override
     public String toString() {
         return String.format("| %3d | %10s | %15s | %6s | %3d | %s |",
-                getId(), category, name, status.name(), userCount, description == null);
+                getId(), category, name, status.name(), userCount,
+                description != null && !description.isEmpty());
     }
 
 }

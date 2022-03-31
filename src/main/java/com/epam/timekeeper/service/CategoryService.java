@@ -1,13 +1,12 @@
 package com.epam.timekeeper.service;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.CategoryMapper;
-import com.epam.timekeeper.dao.preparer.CategoryPreparer;
+import com.epam.timekeeper.dao.impl.CategoryDAOImpl;
 import com.epam.timekeeper.dto.CategoryDTO;
-import com.epam.timekeeper.entity.Activity;
+import com.epam.timekeeper.dto.FullCategoryDTO;
 import com.epam.timekeeper.entity.Category;
 import com.epam.timekeeper.exception.ObjectNotFoundException;
 import com.epam.timekeeper.service.mapper.CategoryDTOMapper;
+import com.epam.timekeeper.service.mapper.FullCategoryDTOMapper;
 
 import java.util.Comparator;
 import java.util.List;
@@ -15,47 +14,42 @@ import java.util.stream.Collectors;
 
 public class CategoryService {
 
-    private final DAO<Category> categoryDAO = new DAO<>(new CategoryPreparer(), new CategoryMapper());
+    private final CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
 
-    public List<CategoryDTO> getAll() {
+    public List<FullCategoryDTO> getFullAll() {
         List<Category> categories = categoryDAO.readAll();
         if (categories == null) {
             return null;
         }
         return categories.stream()
-                .map(CategoryDTOMapper::toDTO)
-                .sorted(Comparator.comparing(CategoryDTO::getName))
+                .map(FullCategoryDTOMapper::toDTO)
+                .sorted(Comparator.comparing(c -> c.getLangName().get("en")))
                 .collect(Collectors.toList());
     }
 
-    public CategoryDTO get(CategoryDTO dto) {
-        Category entity = categoryDAO.readById(dto.getId());
-        return entity == null ? null : CategoryDTOMapper.toDTO(entity);
-    }
-
-    public List<CategoryDTO> getAllOpened() {
+    public List<CategoryDTO> getAllOpened(String lang) {
         List<Category> categories = categoryDAO.readAll();
         if (categories == null) {
             return null;
         }
         return categories.stream()
                 .filter(c -> c.getStatus().equals(Category.Status.OPENED))
-                .map(CategoryDTOMapper::toDTO)
+                .map(c -> CategoryDTOMapper.toDTO(c, lang))
                 .sorted(Comparator.comparing(CategoryDTO::getName))
                 .collect(Collectors.toList());
     }
 
-    public void update(CategoryDTO category) {
+    public void update(FullCategoryDTO category) {
         Category entity = categoryDAO.readById(category.getId());
         if (entity == null) {
             throw new ObjectNotFoundException("Couldn't find category with id = " + category.getId() + " in database.");
         }
-        entity.setName(category.getName());
+        entity.setLangName(category.getLangName());
         categoryDAO.update(entity);
     }
 
-    public void create(CategoryDTO category) {
-        categoryDAO.create(CategoryDTOMapper.toEntity(category));
+    public void create(FullCategoryDTO category) {
+        categoryDAO.create(FullCategoryDTOMapper.toEntity(category));
     }
 
     public void open(CategoryDTO category) {

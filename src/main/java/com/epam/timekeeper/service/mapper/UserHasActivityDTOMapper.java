@@ -1,10 +1,7 @@
 package com.epam.timekeeper.service.mapper;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.ActivityMapper;
-import com.epam.timekeeper.dao.mapper.UserMapper;
-import com.epam.timekeeper.dao.preparer.ActivityPreparer;
-import com.epam.timekeeper.dao.preparer.UserPreparer;
+import com.epam.timekeeper.dao.impl.ActivityDAOImpl;
+import com.epam.timekeeper.dao.impl.UserDAOImpl;
 import com.epam.timekeeper.dto.ActivityDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.dto.UserHasActivityDTO;
@@ -21,18 +18,18 @@ public class UserHasActivityDTOMapper {
     private UserHasActivityDTOMapper() {
     }
 
-    public static UserHasActivityDTO toDTO(UserHasActivity entity) {
+    public static UserHasActivityDTO toDTO(UserHasActivity entity, String lang) {
         UserHasActivityDTO dto = new UserHasActivityDTO();
         dto.setId(entity.getId());
-        DAO<User> userDAO = new DAO<>(new UserPreparer(), new UserMapper());
-        DAO<Activity> activityDAO = new DAO<>(new ActivityPreparer(), new ActivityMapper());
+        UserDAOImpl userDAO = new UserDAOImpl();
+        ActivityDAOImpl activityDAO = new ActivityDAOImpl();
         User user = userDAO.readById(entity.getUserId());
         Activity activity = activityDAO.readById(entity.getActivityId());
         if (user == null || activity == null) {
             throw new DTOConversionException("Error occurred while creating UserHasActivityDTO");
         }
         dto.setUser(UserDTOMapper.toDTO(user));
-        dto.setActivity(ActivityDTOMapper.toDTO(activity));
+        dto.setActivity(ActivityDTOMapper.toDTO(activity, lang));
         dto.setStatus(entity.getStatus());
         Timestamp start = entity.getStartTime();
         Timestamp end = entity.getEndTime();

@@ -35,7 +35,7 @@ public class CategoriesServlet extends HttpServlet {
                 + ((UserDTO) session.getAttribute("user")).getUsername() + ". doGet -> ";
         try {
             CategoryService categoryService = new CategoryService();
-            request.setAttribute("list", categoryService.getAll());
+            request.setAttribute("list", categoryService.getFullAll());
             request.getRequestDispatcher(CATEGORIES_JSP).forward(request, response);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {

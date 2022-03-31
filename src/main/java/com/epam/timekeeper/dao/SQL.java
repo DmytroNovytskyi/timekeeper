@@ -21,46 +21,63 @@ public interface SQL {
                     status      = ?,
                     description = ?
                     WHERE id = ?;""";
-        String DELETE_BY_ID = """
-                DELETE
-                FROM activity
-                WHERE id = ?;""";
 
     }
 
     interface Category {
 
-        String CREATE = """
-                INSERT INTO category (name)
-                VALUES (?);""";
+        String CREATE_CATEGORY_ID = """
+                INSERT INTO category
+                VALUES ();""";
 
-        String READ_ALL = """
+        String GET_LANG_ID = """
+                SELECT *
+                FROM lang
+                WHERE name = ?;""";
+
+        String CREATE = """
+                INSERT INTO category_has_lang (category_id, lang_id, name)
+                VALUES (?, ?, ?);""";
+
+        String READ_ALL_LANG_NAMES = """
+                SELECT name
+                from lang;""";
+
+        String READ_ALL_CATEGORIES = """
                 SELECT *
                 FROM category;""";
 
-        String READ_BY_ID = """
-                SELECT *
+        String READ_CATEGORY_NAME_WITH_LOCALE = """
+                SELECT chl.name
+                FROM category_has_lang chl
+                         JOIN lang l on chl.lang_id = l.id
+                WHERE chl.category_id = ?
+                  AND l.name = ?;""";
+
+        String READ_STATUS_BY_ID = """
+                SELECT status
                 FROM category
                 WHERE id = ?;""";
 
-        String UPDATE_BY_ID = """
+        String UPDATE_STATUS = """
                 UPDATE category
-                SET name   = ?,
-                    status = ?
+                SET status = ?
                 WHERE id = ?;""";
 
-        String DELETE_BY_ID = """
-                DELETE
-                FROM category
-                WHERE id = ?;""";
+        String READ_ID_FOR_LANG_NAME = """
+                SELECT id
+                FROM lang
+                WHERE name = ?;""";
+
+        String UPDATE_NAME = """
+                UPDATE category_has_lang
+                SET name = ?
+                WHERE category_id = ?
+                  AND lang_id = ?;""";
 
     }
 
     interface Role {
-
-        String CREATE = """
-                INSERT INTO role (name)
-                VALUES (?);""";
 
         String READ_ALL = """
                 SELECT *
@@ -71,15 +88,6 @@ public interface SQL {
                 FROM role
                 WHERE id = ?;""";
 
-        String UPDATE_BY_ID = """
-                UPDATE role
-                SET name = ?
-                WHERE id = ?;""";
-
-        String DELETE_BY_ID = """
-                DELETE
-                FROM role
-                WHERE id = ?;""";
     }
 
     interface User {
@@ -105,11 +113,6 @@ public interface SQL {
                     status   = ?
                 WHERE id = ?;""";
 
-        String DELETE_BY_ID = """
-                DELETE
-                FROM user
-                WHERE id = ?;""";
-
     }
 
     interface UserHasActivity {
@@ -132,11 +135,6 @@ public interface SQL {
                 SET status     = ?,
                     start_time = ?,
                     end_time   = ?
-                WHERE id = ?;""";
-
-        String DELETE_BY_ID = """
-                DELETE
-                FROM user_has_activity
                 WHERE id = ?;""";
 
     }

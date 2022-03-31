@@ -1,8 +1,6 @@
 package com.epam.timekeeper.service;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.RoleMapper;
-import com.epam.timekeeper.dao.preparer.RolePreparer;
+import com.epam.timekeeper.dao.impl.RoleDAOImpl;
 import com.epam.timekeeper.dto.RoleDTO;
 import com.epam.timekeeper.entity.Role;
 import com.epam.timekeeper.service.mapper.RoleDTOMapper;
@@ -12,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class RoleService {
 
-    private final DAO<Role> roleDAO = new DAO<>(new RolePreparer(), new RoleMapper());
+    private final RoleDAOImpl roleDAO = new RoleDAOImpl();
 
     public List<RoleDTO> getAll(){
         List<Role> roles = roleDAO.readAll();

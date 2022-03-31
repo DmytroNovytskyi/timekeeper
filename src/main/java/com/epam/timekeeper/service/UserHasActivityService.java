@@ -1,8 +1,6 @@
 package com.epam.timekeeper.service;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.UserHasActivityMapper;
-import com.epam.timekeeper.dao.preparer.UserHasActivityPreparer;
+import com.epam.timekeeper.dao.impl.UserHasActivityDAOImpl;
 import com.epam.timekeeper.dto.ActivityDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.dto.UserHasActivityDTO;
@@ -16,19 +14,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserHasActivityService {
-    private final DAO<UserHasActivity> userHasActivityDAO = new DAO<>(new UserHasActivityPreparer(), new UserHasActivityMapper());
 
-    public List<UserHasActivityDTO> getAll() {
+    private final UserHasActivityDAOImpl userHasActivityDAO = new UserHasActivityDAOImpl();
+
+    public List<UserHasActivityDTO> getAll(String lang) {
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
             return null;
         }
         return userHasActivities.stream()
-                .map(UserHasActivityDTOMapper::toDTO)
+                .map(uha -> UserHasActivityDTOMapper.toDTO(uha, lang))
                 .collect(Collectors.toList());
     }
 
-    public List<UserHasActivityDTO> getAllForUser(UserDTO user) {
+    public List<UserHasActivityDTO> getAllForUser(UserDTO user, String lang) {
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
             return null;
@@ -36,12 +35,12 @@ public class UserHasActivityService {
         int id = user.getId();
         return userHasActivities.stream()
                 .filter(uha -> uha.getUserId() == id)
-                .map(UserHasActivityDTOMapper::toDTO)
+                .map(uha -> UserHasActivityDTOMapper.toDTO(uha, lang))
                 .collect(Collectors.toList());
     }
 
-    public List<UserHasActivityDTO> getActiveForUser(UserDTO user) {
-        List<UserHasActivityDTO> userHasActivities = getAllForUser(user);
+    public List<UserHasActivityDTO> getActiveForUser(UserDTO user, String lang) {
+        List<UserHasActivityDTO> userHasActivities = getAllForUser(user, lang);
         if (userHasActivities == null) {
             return null;
         }
@@ -51,7 +50,7 @@ public class UserHasActivityService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserHasActivityDTO> getAllPending() {
+    public List<UserHasActivityDTO> getAllPending(String lang) {
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
             return null;
@@ -59,11 +58,11 @@ public class UserHasActivityService {
         return userHasActivities.stream()
                 .filter(uha -> uha.getStatus().equals(UserHasActivity.Status.PENDING_ASSIGN)
                         || uha.getStatus().equals(UserHasActivity.Status.PENDING_ABORT))
-                .map(UserHasActivityDTOMapper::toDTO)
+                .map(uha -> UserHasActivityDTOMapper.toDTO(uha, lang))
                 .collect(Collectors.toList());
     }
 
-    public List<UserHasActivityDTO> getPendingForUser(UserDTO user) {
+    public List<UserHasActivityDTO> getPendingForUser(UserDTO user, String lang) {
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
             return null;
@@ -72,7 +71,7 @@ public class UserHasActivityService {
                 .filter(uha -> uha.getUserId() == user.getId()
                         && (uha.getStatus().equals(UserHasActivity.Status.PENDING_ASSIGN)
                         || uha.getStatus().equals(UserHasActivity.Status.PENDING_ABORT)))
-                .map(UserHasActivityDTOMapper::toDTO)
+                .map(uha -> UserHasActivityDTOMapper.toDTO(uha, lang))
                 .collect(Collectors.toList());
     }
 
@@ -145,13 +144,13 @@ public class UserHasActivityService {
         return list.stream().map(UserHasActivityDTO::getActivity).collect(Collectors.toList());
     }
 
-    public List<UserHasActivityDTO> getAllWithSummary() {
+    public List<UserHasActivityDTO> getAllWithSummary(String lang) {
         List<UserHasActivity> userHasActivities = userHasActivityDAO.readAll();
         if (userHasActivities == null) {
             return null;
         }
         Map<Map.Entry<UserDTO, ActivityDTO>, List<UserHasActivityDTO>> map = userHasActivities.stream()
-                .map(UserHasActivityDTOMapper::toDTO)
+                .map(uha -> UserHasActivityDTOMapper.toDTO(uha, lang))
                 .collect(Collectors.groupingBy(x -> new AbstractMap.SimpleEntry<>(x.getUser(), x.getActivity())));
         return map.entrySet().stream().collect(ArrayList::new, (list, x) -> {
             UserHasActivityDTO dto = new UserHasActivityDTO();

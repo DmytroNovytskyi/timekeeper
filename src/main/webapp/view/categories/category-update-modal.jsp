@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <div class="modal" id="updateModal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -8,12 +9,19 @@
                 <form class="row g-3 modalForm"
                       action="categories/update" method="post" novalidate>
                     <div class="col-12 mb-3">
-                        <label for="nameUpdate" class="form-label"><fmt:message
-                                key="admin.categories.modal.category"/></label>
-                        <input id="nameUpdate" class="form-control name" name="name"
-                               required pattern="^[\sa-zA-Z0-9/.-]{8,45}$">
-                        <div class="invalid-feedback"></div>
+                        <label for="enNameUpdate" class="form-label"><fmt:message
+                                key="admin.categories.modal.enCategory"/></label>
+                        <input id="enNameUpdate" class="form-control enName" name="enName"
+                               required pattern="^[\sa-zA-Z0-9\/.-]{8,45}$">
+                        <div class="invalid-feedback enFeedback"></div>
                         <input id="categoryId" type="hidden" name="id">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="uaNameUpdate" class="form-label"><fmt:message
+                                key="admin.categories.modal.uaCategory"/></label>
+                        <input id="uaNameUpdate" class="form-control uaName" name="uaName"
+                               pattern="^[\sА-ЩЬЮЯҐЄІЇа-щьюяґєії0-9\/.-]{8,45}$">
+                        <div class="invalid-feedback uaFeedback"></div>
                     </div>
                     <div class="col-12">
                         <button type="button"

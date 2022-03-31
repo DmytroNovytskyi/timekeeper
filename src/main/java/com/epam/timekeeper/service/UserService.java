@@ -1,8 +1,6 @@
 package com.epam.timekeeper.service;
 
-import com.epam.timekeeper.dao.DAO;
-import com.epam.timekeeper.dao.mapper.UserMapper;
-import com.epam.timekeeper.dao.preparer.UserPreparer;
+import com.epam.timekeeper.dao.impl.UserDAOImpl;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.entity.User;
 import com.epam.timekeeper.exception.ObjectNotFoundException;
@@ -13,7 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserService {
-    private final DAO<User> userDAO = new DAO<>(new UserPreparer(), new UserMapper());
+
+    UserDAOImpl userDAO = new UserDAOImpl();
 
     public UserDTO validate(UserDTO user, String password) {
         List<User> users = userDAO.readAll();

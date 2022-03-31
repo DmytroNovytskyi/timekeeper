@@ -37,12 +37,12 @@ public class ActivitiesServlet extends HttpServlet {
             if (user.getRole().getName().equals("ADMIN")) {
                 ActivityService activityService = new ActivityService();
                 CategoryService categoryService = new CategoryService();
-                request.setAttribute("activities", activityService.getAll());
-                request.setAttribute("categories", categoryService.getAllOpened());
+                request.setAttribute("activities", activityService.getAll(lang));
+                request.setAttribute("categories", categoryService.getAllOpened(lang));
                 request.getRequestDispatcher(ADMIN_ACTIVITIES_JSP).forward(request, response);
             } else {
                 UserHasActivityService userHasActivityService = new UserHasActivityService();
-                request.setAttribute("list", userHasActivityService.getActiveForUser(user));
+                request.setAttribute("list", userHasActivityService.getActiveForUser(user, lang));
                 request.getRequestDispatcher(WORKER_ACTIVITIES_JSP).forward(request, response);
             }
             LOGGER.info(logHeader + "Successfully complete.");

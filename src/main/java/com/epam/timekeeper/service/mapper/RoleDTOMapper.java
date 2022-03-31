@@ -15,11 +15,4 @@ public class RoleDTOMapper {
         return dto;
     }
 
-    public static Role toEntity(RoleDTO dto) {
-        Role entity = new Role();
-        entity.setId(dto.getId());
-        entity.setName(dto.getName());
-        return entity;
-    }
-
 }

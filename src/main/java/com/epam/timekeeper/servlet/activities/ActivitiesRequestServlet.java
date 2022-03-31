@@ -38,7 +38,7 @@ public class ActivitiesRequestServlet extends HttpServlet {
         String logHeader = "session:" + session.getId() + ", username:" + user.getUsername() + ". doGet -> ";
         try {
             ActivityService activityService = new ActivityService();
-            request.setAttribute("list", activityService.getFreeForUser(user));
+            request.setAttribute("list", activityService.getFreeForUser(user, lang));
             request.getRequestDispatcher(REQUEST_ACTIVITIES_JSP).forward(request, response);
             LOGGER.info(logHeader + "Successfully complete.");
         } catch (DBException e) {

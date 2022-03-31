@@ -20,12 +20,35 @@
             const table = $('#dataTable').DataTable(
                 {
                     stateSave: true,
+                    // 'stateSaveParams': function(settings, data) {
+                    //     data.columns.forEach(function(column) {
+                    //         delete column.visible;
+                    //     });
+                    // },
                     "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "<fmt:message key="datatable.all"/>"]],
                     "columnDefs": [
                         {
-                            "targets": [2],
+                            "targets": [4],
                             orderable: false
+                        },
+                        {
+                            "targets": [0, 1],
+                            "visible": false
                         }
+                        <%--                        <c:choose>--%>
+                        <%--                        <c:when test="${cookie.lang.value.equals('ua')}">--%>
+                        <%--                        {--%>
+                        <%--                            "targets": 0,--%>
+                        <%--                            "visible": false--%>
+                        <%--                        }--%>
+                        <%--                        </c:when>--%>
+                        <%--                        <c:otherwise>--%>
+                        <%--                        {--%>
+                        <%--                            "targets": 1,--%>
+                        <%--                            "visible": false--%>
+                        <%--                        }--%>
+                        <%--                        </c:otherwise>--%>
+                        <%--                        </c:choose>--%>
                     ],
                     "language": {
                         "emptyTable": "<fmt:message key="datatable.emptyTable"/>",
@@ -68,19 +91,23 @@
 
             $('#dataTable tbody').on('click', '.updateButton', function () {
                 const data = table.row($(this).parents('tr')).data();
-                const arr = [$(this).attr('id'), data[0]]
+                const arr = [$(this).attr('id'), data[0], data[1]]
                 $('#updateModal').data('data', arr).modal('toggle')
             })
 
             $('#updateModal').on('show.bs.modal', function () {
                 const data = $(this).data('data')
                 $(this).find('#categoryId').val(data[0])
-                const name = $(this).find('#nameUpdate')
-                name.val(data[1])
-                name.removeClass('is-invalid')
+                const enName = $(this).find('#enNameUpdate')
+                enName.val(data[1])
+                enName.removeClass('is-invalid')
+                const uaName = $(this).find('#uaNameUpdate')
+                uaName.val(data[2])
+                uaName.removeClass('is-invalid')
             }).on('hide.bs.modal', function () {
                 $(this).find('#categoryId').val('')
-                $(this).find('#nameUpdate').val('')
+                $(this).find('#enNameUpdate').val('')
+                $(this).find('#uaNameUpdate').val('')
             })
 
             $('.modalForm').on('submit', function (event) {
@@ -88,17 +115,28 @@
                     event.preventDefault()
                     event.stopPropagation()
                 }
-                const category = $(this).find('.name')
-                const feedback = $(this).find('.invalid-feedback')
-                const categoryValue = category.val()
-                if (categoryValue === '') {
-                    feedback.text('<fmt:message key="inputError.category.blank"/>')
-                    category.removeClass('is-valid').addClass('is-invalid')
-                } else if (!/^[\sa-zA-Z0-9/.-]{8,45}$/.test(categoryValue)) {
-                    feedback.text('<fmt:message key="inputError.category.regex"/>')
-                    category.removeClass('is-valid').addClass('is-invalid')
+                const enCategory = $(this).find('.enName')
+                const enFeedback = $(this).find('.enFeedback')
+                const enCategoryValue = enCategory.val()
+                const uaCategory = $(this).find('.uaName')
+                const uaFeedback = $(this).find('.uaFeedback')
+                const uaCategoryValue = uaCategory.val()
+                if (enCategoryValue === '') {
+                    enFeedback.text('<fmt:message key="inputError.enCategory.blank"/>')
+                    enCategory.removeClass('is-valid').addClass('is-invalid')
+                } else if (!/^[\sa-zA-Z0-9\/.-]{8,45}$/.test(enCategoryValue)) {
+                    enFeedback.text('<fmt:message key="inputError.enCategory.regex"/>')
+                    enCategory.removeClass('is-valid').addClass('is-invalid')
                 } else {
-                    category.removeClass('is-invalid').addClass('is-valid')
+                    enFeedback.text('')
+                    enCategory.removeClass('is-invalid').addClass('is-valid')
+                }
+                if (!/^(|[\sА-ЩЬЮЯҐЄІЇа-щьюяґєії0-9\/.-]{8,45})$/.test(uaCategoryValue)) {
+                    uaFeedback.text('<fmt:message key="inputError.uaCategory.regex"/>')
+                    uaCategory.removeClass('is-valid').addClass('is-invalid')
+                } else {
+                    uaFeedback.text('')
+                    uaCategory.removeClass('is-invalid').addClass('is-valid')
                 }
                 $(this).addClass('was-validated')
             })
@@ -125,6 +163,8 @@
         <table id="dataTable" class="table table-hover w-100 text-break">
             <thead>
             <tr>
+                <th></th>
+                <th></th>
                 <th><fmt:message key="admin.categories.category"/></th>
                 <th><fmt:message key="admin.categories.status"/></th>
                 <th></th>
@@ -133,7 +173,16 @@
             <tbody>
             <c:forEach items="${requestScope.list}" var="category">
                 <tr>
-                    <td>${category.name}</td>
+                    <td>${category.langName.get('en')}</td>
+                    <td>${category.langName.get('ua')}</td>
+                    <c:choose>
+                        <c:when test="${cookie.lang.value.equals('ua') && !category.langName.get('ua').equals('')}">
+                            <td>${category.langName.get('ua')}</td>
+                        </c:when>
+                        <c:otherwise>
+                            <td>${category.langName.get('en')}</td>
+                        </c:otherwise>
+                    </c:choose>
                     <td class="text-lowercase">${category.status}</td>
                     <td class="w-25">
                         <div class="d-flex flex-row">
@@ -164,6 +213,8 @@
             </tbody>
             <tfoot>
             <tr>
+                <th></th>
+                <th></th>
                 <th><fmt:message key="admin.categories.category"/></th>
                 <th><fmt:message key="admin.categories.status"/></th>
                 <th></th>

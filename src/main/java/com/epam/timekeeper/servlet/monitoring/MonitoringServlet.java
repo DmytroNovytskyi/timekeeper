@@ -36,9 +36,9 @@ public class MonitoringServlet extends HttpServlet {
         try {
             UserHasActivityService userHasActivityService = new UserHasActivityService();
             if(user.getRole().getName().equals("ADMIN")){
-                request.setAttribute("list", userHasActivityService.getAll());
+                request.setAttribute("list", userHasActivityService.getAll(lang));
             } else {
-                request.setAttribute("list", userHasActivityService.getAllForUser(user));
+                request.setAttribute("list", userHasActivityService.getAllForUser(user, lang));
             }
             request.getRequestDispatcher(MONITORING_JSP).forward(request, response);
             LOGGER.info(logHeader + "Successfully complete.");

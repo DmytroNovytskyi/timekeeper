@@ -1,6 +1,6 @@
 package com.epam.timekeeper.servlet.categories;
 
-import com.epam.timekeeper.dto.CategoryDTO;
+import com.epam.timekeeper.dto.FullCategoryDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.exception.AlreadyExistsException;
 import com.epam.timekeeper.exception.DBException;
@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +32,13 @@ public class CategoryUpdateServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String lang = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("lang")).toList().get(0).getValue();
         int id = Integer.parseInt(request.getParameter("id"));
-        String name = request.getParameter("name");
+        String enName = request.getParameter("enName");
+        String uaName = request.getParameter("uaName");
         String logHeader = "session:" + session.getId() + ", username:" + ((UserDTO) session.getAttribute("user")).getUsername() + ". doPost -> ";
-        if (name.matches(CATEGORY_NAME_REGEX)) {
+        if (enName.matches(CATEGORY_EN_NAME_REGEX) && uaName.matches(CATEGORY_UA_NAME_REGEX)) {
             try {
                 CategoryService categoryService = new CategoryService();
-                categoryService.update(createDTO(id, name));
+                categoryService.update(createFullDTO(id, enName, uaName));
                 LOGGER.info(logHeader + "Successfully complete.");
                 if(lang.equals("en")) {
                     session.setAttribute("successMessage", SUCCESS_UPDATE_MESSAGE);
@@ -66,7 +68,8 @@ public class CategoryUpdateServlet extends HttpServlet {
                 }
             }
         } else {
-            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of category name: " + CATEGORY_NAME_REGEX);
+            LOGGER.error(logHeader + "Passed data doesn't meet the requirements of category name for en: "
+                    + CATEGORY_EN_NAME_REGEX + "or ua: " + CATEGORY_UA_NAME_REGEX);
             if(lang.equals("en")) {
                 session.setAttribute("errorMessage", REQUIREMENTS_MESSAGE);
             } else {
@@ -76,10 +79,13 @@ public class CategoryUpdateServlet extends HttpServlet {
         response.sendRedirect(getServletContext().getContextPath() + CATEGORIES);
     }
 
-    private CategoryDTO createDTO(int id, String name) {
-        CategoryDTO category = new CategoryDTO();
+    private FullCategoryDTO createFullDTO(int id, String enName, String uaName) {
+        FullCategoryDTO category = new FullCategoryDTO();
         category.setId(id);
-        category.setName(name);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("en", enName);
+        map.put("ua", uaName);
+        category.setLangName(map);
         return category;
     }
 

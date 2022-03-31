@@ -56,7 +56,8 @@ public class Activity extends Entity {
     @Override
     public String toString() {
         return String.format("| %3d | %3s | %20s | %6s | %s |",
-                getId(), categoryID, name, status.name(), description == null);
+                getId(), categoryID, name, status.name(),
+                description != null && !description.isEmpty());
     }
 
     public enum Status {
