@@ -15,12 +15,13 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Requests.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
 
+/**
+ * Shows all pending requests for admin and only user related requests to worker.
+ */
 @WebServlet(name = "RequestsServlet", value = REQUESTS)
 public class RequestsServlet extends HttpServlet {
 

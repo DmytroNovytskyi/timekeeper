@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
 
+/**
+ * Shows home page for admin and worker.
+ */
 @WebServlet(name = "HomeServlet", value = HOME)
 public class HomeServlet extends HttpServlet {
 

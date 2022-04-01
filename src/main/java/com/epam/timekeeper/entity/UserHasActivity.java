@@ -3,6 +3,10 @@ package com.epam.timekeeper.entity;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Entity for UserHasActivity. Used to transfer data from service
+ * layer to DAO layer and vise versa.
+ */
 public class UserHasActivity extends Entity {
 
     private int userId;

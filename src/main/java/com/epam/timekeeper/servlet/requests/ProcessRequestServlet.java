@@ -14,11 +14,12 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.DTO_CONVERSION_MESSAGE;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.DTO_CONVERSION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Requests.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Processes admin action to the requests created by worker.
+ */
 @WebServlet(name = "ProcessRequestServlet", value = PROCESS_REQUEST)
 public class ProcessRequestServlet extends HttpServlet {
 

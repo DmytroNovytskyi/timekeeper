@@ -1,6 +1,5 @@
 package com.epam.timekeeper.servlet.categories;
 
-import com.epam.timekeeper.dto.CategoryDTO;
 import com.epam.timekeeper.dto.FullCategoryDTO;
 import com.epam.timekeeper.dto.UserDTO;
 import com.epam.timekeeper.exception.AlreadyExistsException;
@@ -17,11 +16,12 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Processes admin request to create category.
+ */
 @WebServlet(name = "CategoryCreateServlet", value = CATEGORIES_CREATE)
 public class CategoryCreateServlet extends HttpServlet {
 

@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Denies access for users that do not have WORKER role set for them.
+ */
 public class WorkerFilter implements Filter {
 
     private final static String ERROR_MESSAGE = "Access denied!";

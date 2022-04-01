@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Processes logout operation for admin and worker by
+ * removing "user" attribute from session.
+ */
 @WebServlet(name = "QuitServlet", value = QUIT)
 public class QuitServlet extends HttpServlet {
 

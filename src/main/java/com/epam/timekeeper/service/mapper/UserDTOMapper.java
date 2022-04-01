@@ -8,6 +8,9 @@ import com.epam.timekeeper.entity.Role;
 import com.epam.timekeeper.entity.User;
 import com.epam.timekeeper.exception.DTOConversionException;
 
+/**
+ * Maps User data transfer object to pass between service and servlet layers.
+ */
 public class UserDTOMapper {
 
     private UserDTOMapper() {

@@ -8,6 +8,9 @@ import com.epam.timekeeper.service.mapper.RoleDTOMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents the part of service layer that works with roles.
+ */
 public class RoleService {
 
     private final RoleDAOImpl roleDAO = new RoleDAOImpl();

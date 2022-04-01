@@ -15,12 +15,12 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Categories.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
-
+/**
+ * Processes admin request to close category.
+ */
 @WebServlet(name = "CategoryCloseServlet", value = CATEGORY_CLOSE)
 public class CategoryCloseServlet extends HttpServlet {
 

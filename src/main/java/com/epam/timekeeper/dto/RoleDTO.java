@@ -2,6 +2,10 @@ package com.epam.timekeeper.dto;
 
 import java.util.Objects;
 
+/**
+ * Data transfer object for Role. Used to transfer
+ * data from servlet layer to service layer and vise versa.
+ */
 public class RoleDTO extends DTO{
 
     private String name;

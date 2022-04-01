@@ -5,6 +5,10 @@ import java.io.IOException;
 
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
 
+/**
+ * Checks if url pattern has ".jsp" in the end. If so, user gets
+ * redirected to the not found page.
+ */
 public class JSPFilter implements Filter {
 
     @Override

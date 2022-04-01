@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Closes activity and redirects to activities page. Admin only.
+ */
 @WebServlet(name = "ActivityCloseServlet", value = ACTIVITIES_CLOSE)
 public class ActivityCloseServlet extends HttpServlet {
 

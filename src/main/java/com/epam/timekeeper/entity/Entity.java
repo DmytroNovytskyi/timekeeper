@@ -1,5 +1,8 @@
 package com.epam.timekeeper.entity;
 
+/**
+ * Abstract entity with id. Created to be extended by real entity.
+ */
 public abstract class Entity {
 
     private int id;

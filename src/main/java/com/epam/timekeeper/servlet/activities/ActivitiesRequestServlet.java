@@ -15,7 +15,6 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,9 @@ import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
 
+/**
+ * Shows activities for worker to be requested and processes requests.
+ */
 @WebServlet(name = "ActivitiesRequestServlet", value = ACTIVITIES_REQUEST)
 public class ActivitiesRequestServlet extends HttpServlet {
 

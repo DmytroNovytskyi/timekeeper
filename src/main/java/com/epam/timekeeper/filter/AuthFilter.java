@@ -12,6 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * If user tries to access pages other from authentication without
+ * being logged in, he will be redirected to authentication page.
+ */
 public class AuthFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);

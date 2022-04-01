@@ -1,5 +1,8 @@
 package com.epam.timekeeper.dao;
 
+/**
+ * Interface contains SQL constants that are used for creating prepared statements
+ */
 public interface SQL {
 
     interface Activity {

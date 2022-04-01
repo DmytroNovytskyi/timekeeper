@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Denies access for users that do not have ADMIN role set for them.
+ */
 public class AdminFilter implements Filter {
 
     private final static String ERROR_MESSAGE = "Access denied!";

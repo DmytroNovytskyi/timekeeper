@@ -3,6 +3,10 @@ package com.epam.timekeeper.filter;
 import javax.servlet.*;
 import java.io.IOException;
 
+/**
+ * Sets encoding for request. Encoding value is read
+ * from init param with the name "encoding".
+ */
 public class EncodingFilter implements Filter {
 
     private String encoding;

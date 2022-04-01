@@ -10,6 +10,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * When first loaded to memory initializes static BasicDataSource object
+ * with parameters read from resource file with name "application.properties".
+ * For connector to work properly properties with names as "driverClassName",
+ * "url", "user", "password", "maxActive", "maxIdle", "maxWait" should be set into the file;
+ */
 public class MySQLConnector {
     private static final String PROPERTIES = "application.properties";
     private static final String DRIVER = "driverClassName";

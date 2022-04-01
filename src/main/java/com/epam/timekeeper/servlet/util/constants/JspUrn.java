@@ -1,5 +1,8 @@
 package com.epam.timekeeper.servlet.util.constants;
 
+/**
+ * Is used to store constants for URN of JSP pages
+ */
 public interface JspUrn {
 
     String REQUEST_ACTIVITIES_JSP = "/view/activities/request-activities.jsp";

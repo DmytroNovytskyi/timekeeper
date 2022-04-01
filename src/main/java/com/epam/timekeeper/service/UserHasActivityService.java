@@ -13,6 +13,9 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Represents the part of service layer that works with userHasActivities.
+ */
 public class UserHasActivityService {
 
     private final UserHasActivityDAOImpl userHasActivityDAO = new UserHasActivityDAOImpl();

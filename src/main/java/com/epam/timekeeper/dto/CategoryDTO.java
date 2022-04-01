@@ -4,6 +4,10 @@ import com.epam.timekeeper.entity.Category;
 
 import java.util.Objects;
 
+/**
+ * Data transfer object for Category with localized name. Used to transfer
+ * data from servlet layer to service layer and vise versa.
+ */
 public class CategoryDTO extends DTO{
 
     private String name;

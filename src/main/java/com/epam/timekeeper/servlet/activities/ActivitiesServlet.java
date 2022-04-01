@@ -21,6 +21,10 @@ import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
 
+/**
+ * Shows list of all activities for admin and list of
+ * activities for worker that can be started, ended or aborted.
+ */
 @WebServlet(name = "ActivitiesServlet", value = ACTIVITIES)
 public class ActivitiesServlet extends HttpServlet {
 

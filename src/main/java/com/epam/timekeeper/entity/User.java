@@ -2,6 +2,10 @@ package com.epam.timekeeper.entity;
 
 import java.util.Objects;
 
+/**
+ * Entity for User. Used to transfer data from service
+ * layer to DAO layer and vise versa.
+ */
 public class User extends Entity {
     private String username;
     private int roleId;

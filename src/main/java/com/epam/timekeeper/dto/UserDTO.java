@@ -4,6 +4,10 @@ import com.epam.timekeeper.entity.User;
 
 import java.util.Objects;
 
+/**
+ * Data transfer object for User. Used to transfer
+ * data from servlet layer to service layer and vise versa.
+ */
 public class UserDTO extends DTO {
 
     private String username;

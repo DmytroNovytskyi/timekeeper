@@ -1,5 +1,8 @@
 package com.epam.timekeeper.servlet.util.constants;
 
+/**
+ * Is used to store constants for URN of servlets.
+ */
 public interface ServletUrn {
 
     String ACTIVITIES_REQUEST = "/activities/request";

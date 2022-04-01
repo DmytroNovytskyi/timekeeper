@@ -5,6 +5,11 @@ import com.epam.timekeeper.entity.Category;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Data transfer object for Category. Contains HashMap with all
+ * entries with language and corresponding name of category. Used to transfer
+ * data from servlet layer to service layer and vise versa.
+ */
 public class FullCategoryDTO extends DTO{
 
     private HashMap<String, String> langName;

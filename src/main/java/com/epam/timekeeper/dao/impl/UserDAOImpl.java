@@ -11,6 +11,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Implementation for UserDAO interface.
+ */
 public class UserDAOImpl extends UtilDAO implements UserDAO {
 
     @Override

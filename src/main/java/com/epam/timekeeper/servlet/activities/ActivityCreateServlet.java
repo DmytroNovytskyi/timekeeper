@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Creates activity and redirects to activities page. Admin only.
+ */
 @WebServlet(name = "ActivityCreateServlet", value = ACTIVITIES_CREATE)
 public class ActivityCreateServlet extends HttpServlet {
 

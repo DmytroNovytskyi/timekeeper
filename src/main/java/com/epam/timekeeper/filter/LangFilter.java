@@ -9,6 +9,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Checks if cookies are empty. If true, sets cookie with name "lang" and value "en".
+ * Otherwise, looks for cookie with the name of "lang". If "lang" cookie was not found,
+ * then new cookie with the name "lang" and "en" value is created, otherwise, checks for "lang"
+ * parameter in request and sets "en" or "ua" value to the lang cookie that was found.
+ */
 @WebFilter(filterName = "LangFilter")
 public class LangFilter implements Filter {
 

@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of RoleDAO interface.
+ */
 public class RoleDAOImpl extends UtilDAO implements RoleDAO {
 
 

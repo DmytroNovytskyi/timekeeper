@@ -7,6 +7,9 @@ import com.epam.timekeeper.exception.DBException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Util methods for DAO implementation
+ */
 public class UtilDAO {
 
     protected void processSQLExceptionOnDBChange(SQLException e){

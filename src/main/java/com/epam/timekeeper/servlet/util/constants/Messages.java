@@ -1,5 +1,9 @@
 package com.epam.timekeeper.servlet.util.constants;
 
+/**
+ * Is used to store messages that are passed from servlet to user.
+ * Also contains regex for server side data validation.
+ */
 public interface Messages {
 
     interface Activities {

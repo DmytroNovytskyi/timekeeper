@@ -3,6 +3,10 @@ package com.epam.timekeeper.entity;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Entity for Category. Used to transfer data from service
+ * layer to DAO layer and vise versa.
+ */
 public class Category extends Entity {
 
     private HashMap<String, String> langName;

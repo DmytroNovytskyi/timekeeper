@@ -11,6 +11,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation for UserHasActivityDAO interface.
+ */
 public class UserHasActivityDAOImpl extends UtilDAO implements UserHasActivityDAO {
 
     @Override

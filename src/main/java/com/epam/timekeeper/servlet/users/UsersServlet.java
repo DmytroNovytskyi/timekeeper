@@ -17,12 +17,13 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Users.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
 
+/**
+ * Shows admin all users.
+ */
 @WebServlet(name = "UsersServlet", value = USERS)
 public class UsersServlet extends HttpServlet {
 

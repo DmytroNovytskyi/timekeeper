@@ -12,6 +12,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents the part of service layer that works with activities.
+ */
 public class ActivityService {
 
     private final ActivityDAOImpl activityDAO = new ActivityDAOImpl();

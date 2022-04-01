@@ -3,6 +3,10 @@ package com.epam.timekeeper.service.mapper;
 import com.epam.timekeeper.dto.FullCategoryDTO;
 import com.epam.timekeeper.entity.Category;
 
+/**
+ * Maps Category with full map of languages and corresponding names
+ * data transfer object to pass between service and servlet layers.
+ */
 public class FullCategoryDTOMapper {
 
     private FullCategoryDTOMapper() {

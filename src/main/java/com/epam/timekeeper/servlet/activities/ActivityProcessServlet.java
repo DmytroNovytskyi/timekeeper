@@ -18,6 +18,10 @@ import org.slf4j.LoggerFactory;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Processes action that can be made with
+ * activities for worker and redirects to activities page
+ */
 @WebServlet(name = "ActivityProcessServlet", value = ACTIVITIES_PROCESS)
 public class ActivityProcessServlet extends HttpServlet {
 

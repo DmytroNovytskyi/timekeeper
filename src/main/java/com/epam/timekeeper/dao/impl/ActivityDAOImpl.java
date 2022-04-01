@@ -11,6 +11,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of ActivityDAO interface.
+ */
 public class ActivityDAOImpl extends UtilDAO implements ActivityDAO {
     @Override
     public void create(Activity entity) {

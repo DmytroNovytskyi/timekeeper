@@ -10,6 +10,9 @@ import com.epam.timekeeper.exception.DBException;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Implementation of CategoryDAO interface.
+ */
 public class CategoryDAOImpl extends UtilDAO implements CategoryDAO {
 
     @Override

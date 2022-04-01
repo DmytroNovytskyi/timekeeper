@@ -11,6 +11,9 @@ import com.epam.timekeeper.exception.DTOConversionException;
 
 import java.util.List;
 
+/**
+ * Maps Activity data transfer object to pass between service and servlet layers.
+ */
 public class ActivityDTOMapper {
 
     private ActivityDTOMapper() {

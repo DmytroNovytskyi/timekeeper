@@ -5,6 +5,10 @@ import com.epam.timekeeper.entity.UserHasActivity;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Data transfer object for UserHasActivity. Used to transfer
+ * data from servlet layer to service layer and vise versa.
+ */
 public class UserHasActivityDTO extends DTO {
 
     private UserDTO user;

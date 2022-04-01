@@ -6,6 +6,9 @@ import com.epam.timekeeper.exception.DTOConversionException;
 
 import java.util.HashMap;
 
+/**
+ * Maps Category with specified locale data transfer object to pass between service and servlet layers.
+ */
 public class CategoryDTOMapper {
 
     private CategoryDTOMapper() {

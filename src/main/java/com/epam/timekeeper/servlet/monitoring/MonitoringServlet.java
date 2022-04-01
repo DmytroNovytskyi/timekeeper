@@ -16,11 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.epam.timekeeper.servlet.util.constants.JspUrn.*;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE;
-import static com.epam.timekeeper.servlet.util.constants.Messages.Activities.DB_EXCEPTION_MESSAGE_UA;
 import static com.epam.timekeeper.servlet.util.constants.Messages.Monitoring.*;
 import static com.epam.timekeeper.servlet.util.constants.ServletUrn.*;
 
+/**
+ * Shows full monitoring page for admin and only user related for worker.
+ */
 @WebServlet(name = "MonitoringServlet", value = MONITORING)
 public class MonitoringServlet extends HttpServlet {
 

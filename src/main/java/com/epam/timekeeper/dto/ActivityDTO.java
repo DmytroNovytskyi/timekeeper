@@ -4,6 +4,10 @@ import com.epam.timekeeper.entity.Activity;
 
 import java.util.Objects;
 
+/**
+ * Data transfer object for Activity. Used to transfer
+ * data from servlet layer to service layer and vise versa.
+ */
 public class ActivityDTO extends DTO {
 
     private CategoryDTO category;
