@@ -118,7 +118,11 @@ public class UserHasActivityService {
     }
 
     public void declineAbort(UserHasActivityDTO userHasActivity) {
-        userHasActivity.setStatus(UserHasActivity.Status.IN_PROGRESS);
+        if(userHasActivity.getStartTime() == null){
+            userHasActivity.setStatus(UserHasActivity.Status.ASSIGNED);
+        } else {
+            userHasActivity.setStatus(UserHasActivity.Status.IN_PROGRESS);
+        }
         userHasActivity.setStartTime(readStartTimeFromDB(userHasActivity.getId()));
         userHasActivityDAO.update(UserHasActivityDTOMapper.toEntity(userHasActivity));
     }
